@@ -26,19 +26,31 @@ marked.setOptions({
     langPrefix: 'language-'
 });
 
+console.log('codeFormatter available:', !!window.codeFormatter);
+
 marked.use({
     renderer: {
         code: function(text, lang, escaped) {
             const language = lang && lang.trim().toLowerCase();
-            let highlighted = escapeHtml(text || '');
+            let processedText = text || '';
             
-            try {
-                if (text && hljs) {
-                    const escapedText = escapeHtml(text);
-                    highlighted = hljs.highlightAuto(escapedText, language ? [language] : undefined).value;
+            if (processedText && language && window.codeFormatter) {
+                try {
+                    processedText = window.codeFormatter.format(processedText, language);
+                } catch (e) {
+                    console.warn('Format error for ' + language + ': ', e);
                 }
-            } catch (e) {
-                console.warn('Highlight error:', e);
+            }
+            
+            let highlighted = escapeHtml(processedText);
+            
+            if (processedText && hljs) {
+                try {
+                    const escapedText = escapeHtml(processedText);
+                    highlighted = hljs.highlightAuto(escapedText, language ? [language] : undefined).value;
+                } catch (e) {
+                    console.warn('Highlight error:', e);
+                }
             }
             
             return `
