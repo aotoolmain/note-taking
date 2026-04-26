@@ -3,6 +3,7 @@ let currentCateId = "all";
 let search = "";
 let layoutMode = 2;
 let renderTimeout;
+let currentTheme = localStorage.getItem("theme") || "dark-blue";
 
 marked.setOptions({
     gfm: true,
@@ -141,22 +142,41 @@ function setLayout(mode) {
     const btnBoth = document.getElementById('layoutBoth');
     const btnPreview = document.getElementById('layoutPreview');
     
-    btnEditor.className = 'layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition';
-    btnBoth.className = 'layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition';
-    btnPreview.className = 'layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition';
+    btnEditor.style.backgroundColor = 'transparent';
+    btnEditor.style.color = 'var(--text-muted)';
+    btnBoth.style.backgroundColor = 'transparent';
+    btnBoth.style.color = 'var(--text-muted)';
+    btnPreview.style.backgroundColor = 'transparent';
+    btnPreview.style.color = 'var(--text-muted)';
+    
+    btnEditor.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
+    btnEditor.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
+    btnBoth.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
+    btnBoth.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
+    btnPreview.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
+    btnPreview.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
     
     if (mode === 0) {
         editorPanel.style.display = 'flex';
         previewPanel.classList.add('hidden');
-        btnEditor.className = 'layout-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition';
+        btnEditor.style.backgroundColor = 'var(--accent)';
+        btnEditor.style.color = 'white';
+        btnEditor.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
+        btnEditor.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     } else if (mode === 1) {
         editorPanel.style.display = 'flex';
         previewPanel.classList.remove('hidden');
-        btnBoth.className = 'layout-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition';
+        btnBoth.style.backgroundColor = 'var(--accent)';
+        btnBoth.style.color = 'white';
+        btnBoth.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
+        btnBoth.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     } else {
         editorPanel.style.display = 'none';
         previewPanel.classList.remove('hidden');
-        btnPreview.className = 'layout-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition';
+        btnPreview.style.backgroundColor = 'var(--accent)';
+        btnPreview.style.color = 'white';
+        btnPreview.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
+        btnPreview.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     }
     layoutMode = mode;
     updatePreview();
@@ -349,7 +369,28 @@ function handleToolAction(action) {
     }
 }
 
+function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    document.getElementById('theme-dark').classList.remove('bg-blue-500', 'text-white');
+    document.getElementById('theme-light').classList.remove('bg-blue-500', 'text-white');
+    document.getElementById('theme-dark').classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
+    document.getElementById('theme-light').classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
+    
+    if (theme === 'dark-blue') {
+        document.getElementById('theme-dark').classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
+        document.getElementById('theme-dark').classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+    } else {
+        document.getElementById('theme-light').classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
+        document.getElementById('theme-light').classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+    }
+}
+
 async function init() {
+    setTheme(currentTheme);
+    
     await loadCate();
     await loadNotes();
     bindEvents();
@@ -958,6 +999,8 @@ function bindEvents() {
     document.getElementById("layoutEditor").onclick = () => setLayout(0);
     document.getElementById("layoutBoth").onclick = () => setLayout(1);
     document.getElementById("layoutPreview").onclick = () => setLayout(2);
+    document.getElementById("theme-dark").onclick = () => setTheme('dark-blue');
+    document.getElementById("theme-light").onclick = () => setTheme('light');
     
     document.getElementById("search").oninput = async e => { 
         search = e.target.value; 

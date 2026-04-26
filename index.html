@@ -18,8 +18,8 @@
     </script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-screen flex flex-col bg-gray-900 text-gray-100">
-<header class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex justify-between items-center">
+<body class="h-screen flex flex-col" style="background-color: var(--bg-primary); color: var(--text-primary);">
+<header class="px-4 py-3 flex justify-between items-center" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
     <div class="flex items-center gap-2">
         <i class="fa fa-feather-alt text-blue-400 text-xl"></i>
         <h1 class="font-bold text-gray-100">我的笔记</h1>
@@ -28,37 +28,45 @@
         <button id="exportPdf" class="btn btn-pdf"><i class="fa fa-file-pdf-o"></i>导出PDF</button>
         <button id="exportHtml" class="btn btn-html"><i class="fa fa-code"></i>导出HTML</button>
         <button id="exportMd" class="btn btn-md"><i class="fa fa-file-text-o"></i>导出MD</button>
+        <div class="ml-4 flex items-center gap-1 bg-gray-700/50 rounded-lg p-1">
+            <button id="theme-dark" class="theme-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition" title="深蓝主题">
+                <i class="fa fa-moon-o"></i>
+            </button>
+            <button id="theme-light" class="theme-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition" title="亮色主题">
+                <i class="fa fa-sun-o"></i>
+            </button>
+        </div>
     </div>
 </header>
 
 <div class="flex flex-1 overflow-hidden">
-    <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
-        <div class="category-section bg-gray-700/50 border border-gray-600 rounded-lg mx-3 mt-3 p-3">
+    <aside class="w-64 flex flex-col" style="background-color: var(--bg-secondary); border-right: 1px solid var(--border-color);">
+        <div class="category-section rounded-lg mx-3 mt-3 p-3" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
             <div class="relative mb-3">
-                <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input id="search" placeholder="搜索笔记..." class="w-full pl-9 pr-10 py-1.5 border border-gray-600 rounded text-sm outline-none bg-gray-800 text-gray-100">
-                <button id="clearSearch" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 hidden" style="background: none; border: none; cursor: pointer;">
+                <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color: var(--text-muted);"></i>
+                <input id="search" placeholder="搜索笔记..." class="w-full pl-9 pr-10 py-1.5 rounded text-sm outline-none" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                <button id="clearSearch" class="absolute right-2 top-1/2 -translate-y-1/2 hidden" style="background: none; border: none; cursor: pointer; color: var(--text-muted);" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-muted)'">
                     <i class="fa fa-times-circle"></i>
                 </button>
             </div>
-            <div class="flex justify-between items-center border-b border-gray-600 mb-2 pb-2">
-                <h3 class="font-medium text-gray-300">分类</h3>
-                <button id="addCategory" class="text-blue-400"><i class="fa fa-plus-circle"></i></button>
+            <div class="flex justify-between items-center mb-2 pb-2" style="border-bottom: 1px solid var(--border-color);">
+                <h3 class="font-medium" style="color: var(--text-secondary);">分类</h3>
+                <button id="addCategory" style="color: var(--accent);"><i class="fa fa-plus-circle"></i></button>
             </div>
             <div id="categoryList" class="space-y-1">
-                <div class="p-2 rounded hover:bg-gray-600 cursor-pointer active bg-gray-600" data-cate-id="all">
-                    <i class="fa fa-folder-open-o mr-2 text-blue-400"></i>全部笔记
+                <div class="p-2 rounded cursor-pointer active" data-cate-id="all" style="background-color: var(--bg-card-hover);">
+                    <i class="fa fa-folder-open-o mr-2" style="color: var(--accent);"></i>全部笔记
                 </div>
             </div>
         </div>
-        <div class="notes-section bg-gray-700/50 border border-gray-600 rounded-lg mx-3 mt-3 p-3 flex-1">
-            <div class="flex justify-between items-center border-b border-gray-600 mb-2 pb-2">
-                <h3 class="font-medium text-gray-300">笔记列表</h3>
-                <button id="newNoteSide" class="text-blue-400"><i class="fa fa-plus-circle"></i></button>
+        <div class="notes-section rounded-lg mx-3 mt-3 p-3 flex-1" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
+            <div class="flex justify-between items-center mb-2 pb-2" style="border-bottom: 1px solid var(--border-color);">
+                <h3 class="font-medium" style="color: var(--text-secondary);">笔记列表</h3>
+                <button id="newNoteSide" style="color: var(--accent);"><i class="fa fa-plus-circle"></i></button>
             </div>
             <div class="notes-section-content">
                 <div id="noteList" class="space-y-1"></div>
-                <div id="empty" class="text-gray-500 text-center py-10">
+                <div id="empty" class="text-center py-10" style="color: var(--text-muted);">
                     <i class="fa fa-file-text-o text-3xl mb-2"></i>
                     <p>暂无笔记</p>
                 </div>
@@ -66,9 +74,9 @@
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col p-4 bg-gray-800">
-        <div class="flex-1 bg-gray-700/30 border border-gray-600 rounded-lg overflow-hidden flex flex-col">
-            <div class="flex items-center justify-between px-4 py-3 bg-gray-700/50 border-b border-gray-600">
+    <div class="flex-1 flex flex-col p-4" style="background-color: var(--bg-secondary);">
+        <div class="flex-1 rounded-lg overflow-hidden flex flex-col" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
+            <div class="flex items-center justify-between px-4 py-3" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
                 <div class="editor-toolbar" id="toolbar">
                     <button class="tool-btn" data-action="h1"><i class="fa fa-heading"></i><span>H1</span></button>
                     <button class="tool-btn" data-action="h2"><i class="fa fa-heading"></i><span>H2</span></button>
@@ -87,27 +95,27 @@
                     <button class="tool-btn" data-action="code"><i class="fa fa-code"></i><span>行内代码</span></button>
                     <button class="tool-btn" data-action="task"><i class="fa fa-square-o"></i><span>待办</span></button>
                 </div>
-                <div class="flex items-center gap-1 bg-gray-700/50 rounded-lg p-1">
-                    <button id="layoutEditor" class="layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition" title="编辑模式">
+                <div class="flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
+                    <button id="layoutEditor" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑模式">
                         <i class="fa fa-pencil"></i>
                     </button>
-                    <button id="layoutBoth" class="layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition" title="编辑+预览">
+                    <button id="layoutBoth" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑+预览">
                         <i class="fa fa-columns"></i>
                     </button>
-                    <button id="layoutPreview" class="layout-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition" title="预览模式">
+                    <button id="layoutPreview" class="layout-btn p-2 rounded-md transition" style="background-color: var(--accent); color: white;" onmouseover="this.style.backgroundColor='var(--accent-hover)'" onmouseout="this.style.backgroundColor='var(--accent)'" title="预览模式">
                         <i class="fa fa-eye"></i>
                     </button>
                 </div>
             </div>
             <div class="flex-1 overflow-hidden flex">
                 <div id="editorPanel" class="flex-1 flex flex-col hidden">
-                    <div class="pane-header bg-gray-700/30 px-4 py-2 flex items-center gap-2 text-sm text-gray-400">
+                    <div class="pane-header px-4 py-2 flex items-center gap-2 text-sm" style="background-color: var(--bg-secondary); color: var(--text-muted);">
                         <i class="fa fa-pen-fancy"></i> 编辑器 · Markdown 源文本
                     </div>
-                    <textarea id="editor" class="flex-1 w-full p-4 font-mono text-sm resize-none border-none outline-none bg-gray-800 text-gray-100" placeholder="# 开始编写你的笔记..."></textarea>
+                    <textarea id="editor" class="flex-1 w-full p-4 font-mono text-sm resize-none border-none outline-none" style="background-color: var(--bg-primary); color: var(--text-primary);" placeholder="# 开始编写你的笔记..."></textarea>
                 </div>
-                <div id="previewPanel" class="flex-1 flex flex-col border-l border-gray-600">
-                    <div class="pane-header bg-gray-700/30 px-4 py-2 flex items-center gap-2 text-sm text-gray-400">
+                <div id="previewPanel" class="flex-1 flex flex-col" style="border-left: 1px solid var(--border-color);">
+                    <div class="pane-header px-4 py-2 flex items-center gap-2 text-sm" style="background-color: var(--bg-secondary); color: var(--text-muted);">
                         <i class="fa fa-eye"></i> 实时预览 · 渲染效果
                     </div>
                     <div id="preview" class="flex-1 overflow-auto p-4 markdown-body"></div>
