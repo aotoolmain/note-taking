@@ -333,10 +333,21 @@ async function insertImage() {
     document.body.removeChild(input);
 }
 
-function insertCodeBlock() {
-    let lang = prompt('代码语言 (例如 javascript, python, 留空自动)', '');
+async function insertCodeBlock() {
+    const lang = await showPrompt('插入代码块', '请输入代码语言 (留空自动识别)', 'javascript', 'fa-code');
     let codePlaceholder = '// 你的代码';
-    let block = '```' + lang + '\n' + codePlaceholder + '\n```';
+    if (lang === 'python') {
+        codePlaceholder = '# 你的代码';
+    } else if (lang === 'bash' || lang === 'shell') {
+        codePlaceholder = '# 你的命令';
+    } else if (lang === 'html') {
+        codePlaceholder = '<!-- 你的 HTML -->';
+    } else if (lang === 'css') {
+        codePlaceholder = '/* 你的 CSS */';
+    } else if (lang === 'sql') {
+        codePlaceholder = '-- 你的 SQL';
+    }
+    let block = '```' + (lang || '') + '\n' + codePlaceholder + '\n```';
     replaceSelectedText(block, true);
     
     const textarea = document.getElementById('editor');
