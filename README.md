@@ -1,0 +1,178 @@
+# Markdown 笔记应用
+
+一个功能完善的 Markdown 笔记编辑器，支持实时预览、多种导出格式、图片上传等功能。
+
+## 功能特性
+
+- ✨ **Markdown 编辑器** - 支持完整的 Markdown 语法
+- 📝 **实时预览** - 所见即所得的编辑体验
+- 🎨 **三种布局模式** - 编辑、编辑+预览、预览
+- 🖼️ **图片上传** - 支持本地图片上传，自动转换为 URL 引用
+- 📤 **多种导出格式** - PDF、HTML、MD 文件导出
+- 📁 **分类管理** - 支持笔记分类和筛选
+- 🔒 **数据本地存储** - 使用 JSON 文件存储数据
+- 📱 **响应式设计** - 适配不同屏幕尺寸
+
+## 技术栈
+
+- **前端**: HTML5, CSS3, JavaScript (ES6+)
+- **后端**: Node.js, Express.js
+- **样式**: TailwindCSS 3
+- **图标**: Font Awesome 4
+- **Markdown**: marked.js
+- **代码高亮**: highlight.js
+- **PDF导出**: jsPDF + html2canvas
+- **HTML净化**: DOMPurify
+
+## 安装步骤
+
+```bash
+# 克隆项目
+git clone https://gitee.com/xuejinlin/note-taking.git
+
+# 进入项目目录
+cd note-taking
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 或生产环境启动
+npm start
+```
+
+## 使用说明
+
+### 基本操作
+
+1. **创建笔记**: 点击左侧「+」按钮创建新笔记
+2. **编辑笔记**: 点击笔记列表中的笔记进行编辑
+3. **保存**: 笔记会自动保存，无需手动操作
+
+### 布局模式
+
+- **编辑模式**: 仅显示 Markdown 编辑器
+- **编辑+预览**: 左右分屏，左侧编辑，右侧预览
+- **预览模式**: 仅显示渲染后的效果
+
+### 工具栏功能
+
+- **粗体/斜体/删除线**: 文本格式设置
+- **标题**: 支持 H1-H6 标题
+- **列表**: 有序列表和无序列表
+- **引用**: 添加引用块
+- **代码**: 行内代码和代码块
+- **表格**: 插入表格
+- **链接**: 插入超链接
+- **图片**: 上传本地图片
+
+### 导出功能
+
+- **导出 PDF**: 将笔记导出为 PDF 文件
+- **导出 HTML**: 将笔记导出为 HTML 文件
+- **导出 MD**: 将笔记导出为 Markdown 文件
+
+### 分类管理
+
+- **查看分类**: 点击左侧分类标签筛选笔记
+- **添加分类**: 点击分类列表的「+」按钮
+- **重命名分类**: 双击分类名称进行编辑
+- **删除分类**: 右键删除分类（默认分类不可删除）
+
+## 项目结构
+
+```
+note-taking/
+├── data/                    # 数据目录
+│   └── db.json              # 数据库文件（自动生成）
+├── lib/                     # 前端依赖库
+│   ├── dompurify/           # HTML 净化库
+│   ├── font-awesome/        # 图标库
+│   ├── highlightjs/         # 代码高亮库
+│   ├── html2canvas/         # HTML 转 Canvas
+│   ├── jspdf/               # PDF 生成库
+│   ├── marked/              # Markdown 解析库
+│   └── tailwindcss/         # CSS 框架
+├── uploads/                 # 图片上传目录（自动生成）
+├── index.html               # 主页面
+├── script.js                # 前端脚本
+├── server.js                # 后端服务
+├── style.css                # 自定义样式
+├── package.json             # 依赖配置
+├── package-lock.json        # 依赖锁定
+├── .gitignore               # Git 忽略配置
+└── README.md                # 项目说明
+```
+
+## API 接口
+
+### 笔记管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/notes` | 获取笔记列表 |
+| GET | `/api/notes/:id` | 获取单篇笔记 |
+| POST | `/api/notes` | 创建新笔记 |
+| PUT | `/api/notes/:id` | 更新笔记 |
+| DELETE | `/api/notes/:id` | 删除笔记 |
+
+### 分类管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/categories` | 获取分类列表 |
+| POST | `/api/categories` | 创建新分类 |
+| PUT | `/api/categories/:id` | 更新分类名称 |
+| DELETE | `/api/categories/:id` | 删除分类 |
+
+### 图片上传
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/upload/image` | 上传图片 |
+
+## 配置说明
+
+- **端口**: 默认使用端口 3000，可通过环境变量 `PORT` 自定义
+- **数据库**: 数据存储在 `data/db.json` 文件中
+- **上传目录**: 图片上传到 `uploads/` 目录
+
+## 开发说明
+
+### 本地开发
+
+```bash
+# 启动开发服务器（自动热重载）
+npm run dev
+```
+
+### 生产部署
+
+```bash
+# 安装依赖
+npm install --production
+
+# 启动服务器
+npm start
+```
+
+## 浏览器支持
+
+- Chrome (推荐)
+- Firefox
+- Safari
+- Edge
+
+## 许可证
+
+MIT License
+
+## 作者
+
+xuejinlin
+
+---
+
+**注意**: 首次运行时，`data/` 和 `uploads/` 目录会自动创建。如果需要清空数据，直接删除 `data/db.json` 文件即可。
