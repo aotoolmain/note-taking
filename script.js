@@ -443,10 +443,17 @@ async function loadNotes() {
     
     notes.forEach(note => {
         const item = document.createElement("div");
-        item.className = "note-item flex justify-between items-start bg-gray-700/30 hover:bg-gray-600/50";
+        item.className = "note-item flex justify-between items-start";
+        item.style.backgroundColor = 'var(--bg-secondary)';
         item.draggable = true;
         item.dataset.noteId = note.id;
-        if (currentId === note.id) item.classList.add("active", "bg-blue-600/40", "border-l-2", "border-blue-400");
+        item.onmouseover = function() { this.style.backgroundColor = 'var(--bg-card-hover)'; };
+        item.onmouseout = function() { if (!this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-secondary)'; };
+        if (currentId === note.id) {
+            item.classList.add("active");
+            item.style.backgroundColor = 'var(--bg-card-hover)';
+            item.style.borderLeft = '3px solid var(--accent)';
+        }
         
         item.ondragstart = (e) => {
             e.dataTransfer.setData("text/plain", note.id);
@@ -461,11 +468,12 @@ async function loadNotes() {
         };
         
         const iconDiv = document.createElement("div");
-        iconDiv.className = "text-gray-400 mr-2 flex-shrink-0";
-        iconDiv.innerHTML = '<i class="fa fa-file-text-o"></i>';
+        iconDiv.className = "mr-2 flex-shrink-0";
+        iconDiv.innerHTML = '<i class="fa fa-file-text-o" style="color: var(--text-muted);"></i>';
         
         const titleDiv = document.createElement("div");
-        titleDiv.className = "font-medium text-gray-200 truncate";
+        titleDiv.className = "font-medium truncate";
+        titleDiv.style.color = 'var(--text-primary)';
         titleDiv.textContent = note.title;
         titleDiv.title = note.title;
         
@@ -473,11 +481,14 @@ async function loadNotes() {
         metaDiv.className = "flex items-center gap-2 flex-wrap";
         
         const cateDiv = document.createElement("span");
-        cateDiv.className = "text-xs px-2 py-0.5 bg-blue-500/30 text-blue-300 rounded-full";
+        cateDiv.className = "text-xs px-2 py-0.5 rounded-full";
+        cateDiv.style.backgroundColor = 'rgba(59, 130, 246, 0.3)';
+        cateDiv.style.color = 'var(--accent)';
         cateDiv.textContent = note.cateName || "未分类";
         
         const timeDiv = document.createElement("span");
-        timeDiv.className = "text-xs text-gray-500";
+        timeDiv.className = "text-xs";
+        timeDiv.style.color = 'var(--text-muted)';
         timeDiv.textContent = formatTime(note.time);
         
         metaDiv.appendChild(cateDiv);
@@ -495,15 +506,24 @@ async function loadNotes() {
         content.onclick = () => openNote(note.id);
         
         const editBtn = document.createElement("button");
-        editBtn.className = "text-gray-400 hover:text-blue-400 transition p-1 opacity-0 pointer-events-none";
+        editBtn.className = "p-1 opacity-0 pointer-events-none transition";
+        editBtn.style.color = 'var(--text-muted)';
+        editBtn.style.background = 'none';
+        editBtn.style.border = 'none';
+        editBtn.style.cursor = 'pointer';
         editBtn.innerHTML = '<i class="fa fa-pencil"></i>';
+        editBtn.onmouseover = function() { this.style.color = 'var(--accent)'; };
+        editBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
         editBtn.onclick = async (e) => {
             e.stopPropagation();
             
             const input = document.createElement("input");
             input.type = "text";
             input.value = note.title;
-            input.className = "font-medium w-full px-2 py-1 border border-gray-500 rounded bg-gray-800 text-gray-100 outline-none";
+            input.className = "font-medium w-full px-2 py-1 rounded outline-none";
+            input.style.backgroundColor = 'var(--bg-secondary)';
+            input.style.border = '1px solid var(--border-color)';
+            input.style.color = 'var(--text-primary)';
             
             let isHandled = false;
             
@@ -556,8 +576,14 @@ async function loadNotes() {
         };
         
         const deleteBtn = document.createElement("button");
-        deleteBtn.className = "text-gray-400 hover:text-red-400 transition p-1 opacity-0 pointer-events-none";
+        deleteBtn.className = "p-1 opacity-0 pointer-events-none transition";
+        deleteBtn.style.color = 'var(--text-muted)';
+        deleteBtn.style.background = 'none';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.cursor = 'pointer';
         deleteBtn.innerHTML = '<i class="fa fa-trash-o"></i>';
+        deleteBtn.onmouseover = function() { this.style.color = '#ef4444'; };
+        deleteBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
         deleteBtn.onclick = async (e) => {
             e.stopPropagation();
             const confirmed = await showConfirm("确定要删除这篇笔记吗？");
@@ -655,15 +681,19 @@ async function loadCate() {
     
     categories.forEach(cat => {
         const d = document.createElement("div");
-        d.className = "p-2 rounded hover:bg-gray-600 cursor-pointer flex items-center justify-between";
+        d.className = "p-2 rounded cursor-pointer flex items-center justify-between transition";
+        d.style.color = 'var(--text-primary)';
+        d.onmouseover = function() { this.style.backgroundColor = 'var(--bg-card-hover)'; };
+        d.onmouseout = function() { if (!this.classList.contains('active')) this.style.backgroundColor = 'transparent'; };
         if (currentCateId === String(cat.id)) {
-            d.classList.add("active", "bg-gray-600");
+            d.classList.add("active");
+            d.style.backgroundColor = 'var(--bg-card-hover)';
         }
         d.dataset.cateId = cat.id;
         
         const nameDiv = document.createElement("div");
         nameDiv.className = "flex items-center flex-1";
-        nameDiv.innerHTML = `<i class="fa fa-folder-o mr-2"></i>${cat.name}`;
+        nameDiv.innerHTML = `<i class="fa fa-folder-o mr-2" style="color: var(--accent);"></i>${cat.name}`;
         nameDiv.onclick = async () => { 
             selectCategory(cat.id);
         };
@@ -674,14 +704,23 @@ async function loadCate() {
             actions.className = "flex gap-1 opacity-0";
             
             const editBtn = document.createElement("button");
-            editBtn.className = "text-gray-400 hover:text-blue-400 transition p-1";
+            editBtn.style.color = 'var(--text-muted)';
+            editBtn.style.padding = '4px';
+            editBtn.style.background = 'none';
+            editBtn.style.border = 'none';
+            editBtn.style.cursor = 'pointer';
             editBtn.innerHTML = '<i class="fa fa-pencil"></i>';
+            editBtn.onmouseover = function() { this.style.color = 'var(--accent)'; };
+            editBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
             editBtn.onclick = async (e) => {
                 e.stopPropagation();
                 const input = document.createElement("input");
                 input.type = "text";
                 input.value = cat.name;
-                input.className = "font-medium w-full px-2 py-1 border border-gray-500 rounded bg-gray-800 text-gray-100 outline-none";
+                input.className = "font-medium w-full px-2 py-1 rounded outline-none";
+                input.style.backgroundColor = 'var(--bg-secondary)';
+                input.style.border = '1px solid var(--border-color)';
+                input.style.color = 'var(--text-primary)';
                 
                 const handleEdit = async (save) => {
                     input.removeEventListener("keydown", handleKeydown);
@@ -729,8 +768,14 @@ async function loadCate() {
             };
             
             const deleteBtn = document.createElement("button");
-            deleteBtn.className = "text-gray-400 hover:text-red-400 transition p-1";
+            deleteBtn.style.color = 'var(--text-muted)';
+            deleteBtn.style.padding = '4px';
+            deleteBtn.style.background = 'none';
+            deleteBtn.style.border = 'none';
+            deleteBtn.style.cursor = 'pointer';
             deleteBtn.innerHTML = '<i class="fa fa-trash-o"></i>';
+            deleteBtn.onmouseover = function() { this.style.color = '#ef4444'; };
+            deleteBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
             deleteBtn.onclick = async (e) => {
                 e.stopPropagation();
                 const confirmed = await showConfirm("确定要删除这个分类吗？该分类下的笔记将被移到未分类。");
