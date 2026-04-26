@@ -208,12 +208,34 @@
     background: var(--bg-tertiary);
     border-radius: 0 10px 10px 0;
 }
-.markdown-body ul, .markdown-body ol {
+.markdown-body ul {
     padding-left: 1.6em;
     margin: 0.8em 0;
+    list-style-type: disc;
+}
+.markdown-body ol {
+    padding-left: 1.6em;
+    margin: 0.8em 0;
+    list-style-type: decimal;
 }
 .markdown-body li {
     margin: 0.3em 0;
+}
+.markdown-body ul ul {
+    list-style-type: circle;
+    padding-left: 1.2em;
+}
+.markdown-body ol ol {
+    list-style-type: lower-alpha;
+    padding-left: 1.2em;
+}
+.markdown-body ul ul ul {
+    list-style-type: square;
+    padding-left: 1.2em;
+}
+.markdown-body ol ol ol {
+    list-style-type: lower-roman;
+    padding-left: 1.2em;
 }
 .markdown-body table {
     border-collapse: collapse;
