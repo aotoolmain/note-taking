@@ -374,17 +374,29 @@ function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     
-    document.getElementById('theme-dark').classList.remove('bg-blue-500', 'text-white');
-    document.getElementById('theme-light').classList.remove('bg-blue-500', 'text-white');
-    document.getElementById('theme-dark').classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
-    document.getElementById('theme-light').classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
+    const btnDark = document.getElementById('theme-dark');
+    const btnLight = document.getElementById('theme-light');
+    
+    btnDark.style.backgroundColor = 'transparent';
+    btnDark.style.color = 'var(--text-muted)';
+    btnDark.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
+    btnDark.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
+    
+    btnLight.style.backgroundColor = 'transparent';
+    btnLight.style.color = 'var(--text-muted)';
+    btnLight.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
+    btnLight.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
     
     if (theme === 'dark-blue') {
-        document.getElementById('theme-dark').classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
-        document.getElementById('theme-dark').classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        btnDark.style.backgroundColor = 'var(--accent)';
+        btnDark.style.color = 'white';
+        btnDark.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
+        btnDark.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     } else {
-        document.getElementById('theme-light').classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-600');
-        document.getElementById('theme-light').classList.add('bg-blue-500', 'text-white', 'hover:bg-blue-600');
+        btnLight.style.backgroundColor = 'var(--accent)';
+        btnLight.style.color = 'white';
+        btnLight.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
+        btnLight.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     }
 }
 
