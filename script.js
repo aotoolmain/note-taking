@@ -414,6 +414,17 @@ async function init() {
     });
     
     editor.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const value = editor.value;
+            editor.value = value.substring(0, start) + '\t' + value.substring(end);
+            editor.selectionStart = editor.selectionEnd = start + 1;
+            updatePreview();
+            return;
+        }
+        
         if (e.ctrlKey || e.metaKey) {
             e.preventDefault();
             switch(e.key.toLowerCase()) {
