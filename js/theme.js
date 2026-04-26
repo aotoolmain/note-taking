@@ -27,4 +27,19 @@ function setTheme(theme) {
         btnLight.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
         btnLight.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
     }
+    
+    updateHighlightStyle(theme);
+}
+
+function updateHighlightStyle(theme) {
+    let existingLink = document.getElementById('highlight-style');
+    if (existingLink) {
+        existingLink.remove();
+    }
+    
+    const link = document.createElement('link');
+    link.id = 'highlight-style';
+    link.rel = 'stylesheet';
+    link.href = theme === 'dark-blue' ? 'lib/highlightjs/github-dark.min.css' : 'lib/highlightjs/github.min.css';
+    document.head.appendChild(link);
 }

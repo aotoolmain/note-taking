@@ -12,13 +12,6 @@ function updatePreview() {
                 let rawHtml = await window.marked.parse(rawMarkdown);
                 const cleanHtml = DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
                 preview.innerHTML = cleanHtml;
-                
-                preview.querySelectorAll('pre').forEach((pre) => {
-                    const code = pre.querySelector('code');
-                    if (code) {
-                        hljs.highlightElement(code);
-                    }
-                });
             } catch (e) {
                 console.error('Markdown parse error:', e);
                 preview.innerHTML = rawMarkdown.replace(/\n/g, '<br>');
@@ -227,8 +220,19 @@ async function insertImage() {
     document.body.removeChild(input);
 }
 
+const codeLanguages = [
+    'javascript', 'typescript', 'python', 'java', 'go', 'rust', 'c', 'cpp', 'csharp',
+    'bash', 'shell', 'powershell',
+    'html', 'css', 'scss', 'sass', 'less',
+    'sql', 'mysql', 'postgresql', 'sqlite',
+    'json', 'yaml', 'xml', 'markdown',
+    'php', 'ruby', 'swift', 'kotlin', 'dart',
+    'dockerfile', 'makefile', 'gradle', 'maven',
+    'vue', 'react', 'angular', 'svelte', 'solidity'
+];
+
 async function insertCodeBlock() {
-    const lang = await showPrompt('插入代码块', '请输入代码语言 (留空自动识别)', 'javascript', 'fa-code');
+    const lang = await showSelectPrompt('插入代码块', '请选择代码语言', codeLanguages, 'javascript', 'fa-code');
     if (!lang) return;
     let codePlaceholder = '// 你的代码';
     if (lang === 'python') {
@@ -237,10 +241,16 @@ async function insertCodeBlock() {
         codePlaceholder = '# 你的命令';
     } else if (lang === 'html') {
         codePlaceholder = '<!-- 你的 HTML -->';
-    } else if (lang === 'css') {
+    } else if (lang === 'css' || lang === 'scss' || lang === 'sass' || lang === 'less') {
         codePlaceholder = '/* 你的 CSS */';
-    } else if (lang === 'sql') {
+    } else if (lang === 'sql' || lang === 'mysql' || lang === 'postgresql' || lang === 'sqlite') {
         codePlaceholder = '-- 你的 SQL';
+    } else if (lang === 'yaml') {
+        codePlaceholder = '# 你的配置';
+    } else if (lang === 'dockerfile') {
+        codePlaceholder = '# 你的 Dockerfile';
+    } else if (lang === 'makefile') {
+        codePlaceholder = '# 你的 Makefile';
     }
     let block = '```' + (lang || '') + '\n' + codePlaceholder + '\n```';
     replaceSelectedText(block, true);

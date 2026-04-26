@@ -70,6 +70,7 @@ loadDb();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+app.use('/lib', express.static(path.join(__dirname, 'lib')));
 
 app.get('/api/notes', (req, res) => {
   let notes = db.notes;

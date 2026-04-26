@@ -37,28 +37,35 @@ async function exportPdf() {
     const content = await markdownToHtml(rawMarkdown);
     
     const pdfContent = document.createElement("div");
+    pdfContent.style.cssText = 'position: fixed; top: -1000px; left: -1000px; background: white;';
     pdfContent.innerHTML = `
         <style>
-            .pdf-container { width: 595px; margin: 0 auto; padding: 20px; background: white; }
-            .pdf-meta { font-size: 12px; color: #64748b; margin-bottom: 15px; }
-            .pdf-meta span { margin-right: 20px; }
-            .pdf-title { font-size: 24px; font-weight: bold; color: #003b6f; border-bottom: 2px solid #003b6f; padding-bottom: 10px; margin-bottom: 20px; }
-            .pdf-content { font-size: 14px; line-height: 1.8; color: #212529; }
-            .pdf-content img { max-width: 100%; height: auto; }
-            .pdf-content table { border-collapse: collapse; width: 100%; margin: 10px 0; }
-            .pdf-content th, .pdf-content td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            .pdf-content th { background-color: #f5f5f5; }
-            .pdf-content ul, .pdf-content ol { padding-left: 20px; }
-            .pdf-content pre { background: #1e293b; padding: 12px; border-radius: 4px; overflow-x: auto; }
-            .pdf-content code { font-family: 'Fira Code', monospace; font-size: 13px; }
-            .pdf-content pre code { color: #e2e8f0; }
-            .pdf-content blockquote { border-left: 4px solid #2563eb; padding-left: 12px; color: #64748b; margin: 10px 0; }
-            .pdf-content h1 { font-size: 22px; margin: 20px 0 10px; }
-            .pdf-content h2 { font-size: 20px; margin: 18px 0 8px; }
-            .pdf-content h3 { font-size: 18px; margin: 16px 0 6px; }
-            .pdf-content h4, .pdf-content h5, .pdf-content h6 { font-size: 16px; margin: 14px 0 6px; }
-            .pdf-content a { color: #2563eb; text-decoration: underline; }
-            .pdf-content hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            .pdf-container { width: 600px; padding: 40px; background: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; }
+            .pdf-meta { font-size: 13px; color: #666; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+            .pdf-meta span { margin-right: 30px; }
+            .pdf-title { font-size: 26px; font-weight: bold; color: #1a1a2e; margin-bottom: 24px; line-height: 1.3; }
+            .pdf-content { font-size: 15px; line-height: 1.8; color: #333; }
+            .pdf-content img { max-width: 100%; height: auto; border-radius: 4px; margin: 10px 0; }
+            .pdf-content table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+            .pdf-content th, .pdf-content td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+            .pdf-content th { background-color: #f8f9fa; font-weight: 600; }
+            .pdf-content ul, .pdf-content ol { padding-left: 28px; margin: 12px 0; }
+            .pdf-content li { margin-bottom: 6px; }
+            .pdf-content pre { background: #2d2d2d; padding: 16px; border-radius: 6px; overflow-x: auto; margin: 16px 0; }
+            .pdf-content code { font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; font-size: 13px; }
+            .pdf-content pre code { color: #ccc; }
+            .pdf-content blockquote { border-left: 4px solid #3b82f6; padding: 12px 16px; color: #666; margin: 16px 0; background: #f8fafc; border-radius: 0 4px 4px 0; }
+            .pdf-content h1 { font-size: 22px; margin: 24px 0 12px; color: #1a1a2e; }
+            .pdf-content h2 { font-size: 20px; margin: 20px 0 10px; color: #1a1a2e; }
+            .pdf-content h3 { font-size: 18px; margin: 18px 0 8px; color: #1a1a2e; }
+            .pdf-content h4, .pdf-content h5, .pdf-content h6 { font-size: 16px; margin: 16px 0 8px; color: #1a1a2e; }
+            .pdf-content a { color: #3b82f6; text-decoration: none; }
+            .pdf-content a:hover { text-decoration: underline; }
+            .pdf-content hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+            .pdf-content strong { font-weight: 600; }
+            .pdf-content em { font-style: italic; }
+            .pdf-content del { text-decoration: line-through; }
         </style>
         <div class="pdf-container">
             <div class="pdf-meta">
@@ -73,10 +80,11 @@ async function exportPdf() {
     document.body.appendChild(pdfContent);
     
     try {
-        const canvas = await html2canvas(pdfContent, {
+        const canvas = await html2canvas(pdfContent.querySelector('.pdf-container'), {
             scale: 2,
             useCORS: true,
-            logging: false
+            logging: false,
+            backgroundColor: '#ffffff'
         });
         
         const imgData = canvas.toDataURL('image/png');
@@ -170,9 +178,18 @@ async function exportMd() {
     const res = await fetch(`/api/notes/${currentId}`);
     const note = await res.json();
     const title = note.title || "无标题";
+    const cateName = note.cateName || '未分类';
+    const time = formatDateTime(note.time);
     const content = document.getElementById('editor').value;
     
-    const mdContent = `# ${title}\n\n---\n\n${content}`;
+    const mdContent = `# ${title}
+
+> **分类**：${cateName}  
+> **创建时间**：${time}
+
+---
+
+${content}`;
     
     const blob = new Blob([mdContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);

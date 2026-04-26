@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>✨ 我的笔记</title>
+    <script>
+        console.warn = function() {};
+    </script>
     <script src="lib/tailwindcss/tailwind.js"></script>
-    <link rel="stylesheet" href="lib/font-awesome/font-awesome.min.css">
-    <script src="lib/jspdf/jspdf.min.js"></script>
-    <script src="lib/html2canvas/html2canvas.min.js"></script>
-    <script src="lib/marked/marked.min.js"></script>
-    <script src="lib/highlightjs/highlight.min.js"></script>
-    <link rel="stylesheet" href="lib/highlightjs/github-dark.min.css">
-    <script src="lib/dompurify/purify.min.js"></script>
     <script>
         tailwind.config = {
             theme: { extend: { colors: { primary: '#2563eb' } } }
         }
     </script>
+    <link rel="stylesheet" href="lib/font-awesome/font-awesome.min.css">
+    <script src="lib/jspdf/jspdf.min.js"></script>
+    <script src="lib/html2canvas/html2canvas.min.js"></script>
+    <script src="lib/marked/marked.min.js"></script>
+    <script src="lib/highlightjs/highlight.min.js"></script>
+    <script src="lib/dompurify/purify.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="h-screen flex flex-col" style="background-color: var(--bg-primary); color: var(--text-primary);">
@@ -187,130 +189,130 @@
     </div>
 </div>
 
-<div id="shortcutDrawer" class="fixed inset-y-0 right-0 w-80 bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
+<div id="shortcutDrawer" class="fixed inset-y-0 right-0 w-80 shadow-2xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto" style="background-color: var(--bg-secondary);">
     <div class="p-6">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-100">快捷键帮助</h2>
-            <button id="closeShortcutBtn" class="text-gray-400 hover:text-gray-200 transition">
+            <h2 class="text-xl font-bold" style="color: var(--text-primary);">快捷键帮助</h2>
+            <button id="closeShortcutBtn" class="transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
                 <i class="fa fa-times text-xl"></i>
             </button>
         </div>
         
         <div class="space-y-6">
             <div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">编辑操作</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">编辑操作</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">撤销</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Z</kbd>
+                        <span style="color: var(--text-secondary);">撤销</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+Z</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">重做</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Shift+Z</kbd>
+                        <span style="color: var(--text-secondary);">重做</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+Shift+Z</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">复制</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+C</kbd>
+                        <span style="color: var(--text-secondary);">复制</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+C</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">粘贴</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+V</kbd>
+                        <span style="color: var(--text-secondary);">粘贴</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+V</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">剪切</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+X</kbd>
+                        <span style="color: var(--text-secondary);">剪切</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+X</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">全选</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+A</kbd>
+                        <span style="color: var(--text-secondary);">全选</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+A</kbd>
                     </div>
                 </div>
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">文本格式化</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">文本格式化</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">粗体</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+B</kbd>
+                        <span style="color: var(--text-secondary);">粗体</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+B</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">斜体</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+I</kbd>
+                        <span style="color: var(--text-secondary);">斜体</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+I</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">删除线</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+S</kbd>
+                        <span style="color: var(--text-secondary);">删除线</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+S</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">行内代码</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+`</kbd>
+                        <span style="color: var(--text-secondary);">行内代码</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+`</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">代码块</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Shift+C</kbd>
+                        <span style="color: var(--text-secondary);">代码块</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+Shift+C</kbd>
                     </div>
                 </div>
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">标题</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">标题</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">一级标题</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+1</kbd>
+                        <span style="color: var(--text-secondary);">一级标题</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+1</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">二级标题</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+2</kbd>
+                        <span style="color: var(--text-secondary);">二级标题</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+2</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">三级标题</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+3</kbd>
+                        <span style="color: var(--text-secondary);">三级标题</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+3</kbd>
                     </div>
                 </div>
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">列表</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">列表</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">无序列表</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+L</kbd>
+                        <span style="color: var(--text-secondary);">无序列表</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+L</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">有序列表</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+O</kbd>
+                        <span style="color: var(--text-secondary);">有序列表</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+O</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">待办事项</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+T</kbd>
+                        <span style="color: var(--text-secondary);">待办事项</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+T</kbd>
                     </div>
                 </div>
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">插入内容</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">插入内容</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">链接</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+K</kbd>
+                        <span style="color: var(--text-secondary);">链接</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+K</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">图片</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+G</kbd>
+                        <span style="color: var(--text-secondary);">图片</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+G</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">引用</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Q</kbd>
+                        <span style="color: var(--text-secondary);">引用</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+Q</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">表格</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+E</kbd>
+                        <span style="color: var(--text-secondary);">表格</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+E</kbd>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-300">分割线</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+-</kbd>
+                        <span style="color: var(--text-secondary);">分割线</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+-</kbd>
                     </div>
                 </div>
             </div>
@@ -320,12 +322,12 @@
 
 <div id="shortcutOverlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
 
-<script src="js/ui-utils.js"></script>
-<script src="js/editor.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/notes-api.js"></script>
-<script src="js/export.js"></script>
-<script src="js/bind-events.js"></script>
 <script src="js/main.js"></script>
+    <script src="js/ui-utils.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/notes-api.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/bind-events.js"></script>
 </body>
 </html>
