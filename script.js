@@ -457,14 +457,16 @@ async function loadNotes() {
         const item = document.createElement("div");
         item.className = "note-item flex justify-between items-start";
         item.style.backgroundColor = 'var(--bg-secondary)';
+        item.style.borderLeft = '3px solid transparent';
         item.draggable = true;
         item.dataset.noteId = note.id;
         item.onmouseover = function() { this.style.backgroundColor = 'var(--bg-card-hover)'; };
-        item.onmouseout = function() { if (!this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-secondary)'; };
+        item.onmouseout = function() { if (!this.classList.contains('active')) { this.style.backgroundColor = 'var(--bg-secondary)'; this.style.borderLeft = '3px solid transparent'; } };
         if (currentId === note.id) {
             item.classList.add("active");
             item.style.backgroundColor = 'var(--bg-card-hover)';
             item.style.borderLeft = '3px solid var(--accent)';
+            item.onmouseout = function() { if (this.classList.contains('active')) { this.style.backgroundColor = 'var(--bg-card-hover)'; this.style.borderLeft = '3px solid var(--accent)'; } };
         }
         
         item.ondragstart = (e) => {
@@ -695,11 +697,13 @@ async function loadCate() {
         const d = document.createElement("div");
         d.className = "p-2 rounded cursor-pointer flex items-center justify-between transition";
         d.style.color = 'var(--text-primary)';
+        d.style.backgroundColor = 'transparent';
         d.onmouseover = function() { this.style.backgroundColor = 'var(--bg-card-hover)'; };
         d.onmouseout = function() { if (!this.classList.contains('active')) this.style.backgroundColor = 'transparent'; };
         if (currentCateId === String(cat.id)) {
             d.classList.add("active");
             d.style.backgroundColor = 'var(--bg-card-hover)';
+            d.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-hover)'; };
         }
         d.dataset.cateId = cat.id;
         
@@ -849,12 +853,16 @@ async function loadCate() {
 function selectCategory(cateId) {
     const categoryItems = document.querySelectorAll("[data-cate-id]");
     categoryItems.forEach(item => {
-        item.classList.remove("active", "bg-gray-600");
+        item.classList.remove("active");
+        item.style.backgroundColor = 'transparent';
+        item.onmouseout = function() { this.style.backgroundColor = 'transparent'; };
     });
     
     const activeItem = document.querySelector(`[data-cate-id="${cateId}"]`);
     if (activeItem) {
-        activeItem.classList.add("active", "bg-gray-600");
+        activeItem.classList.add("active");
+        activeItem.style.backgroundColor = 'var(--bg-card-hover)';
+        activeItem.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-hover)'; };
     }
     
     currentCateId = String(cateId);
