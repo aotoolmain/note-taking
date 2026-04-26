@@ -158,6 +158,53 @@ npm install --production
 npm start
 ```
 
+### Docker 部署
+
+#### 使用 Docker Compose（推荐）
+
+```bash
+# 构建并启动容器
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+
+# 停止容器
+docker-compose down
+
+# 重启容器
+docker-compose restart
+```
+
+#### 使用 Docker 命令
+
+```bash
+# 构建镜像
+docker build -t note-taking .
+
+# 运行容器
+docker run -d \
+  --name note-taking \
+  -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/uploads:/app/uploads \
+  --restart unless-stopped \
+  note-taking
+```
+
+#### Docker 环境变量
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| PORT | 3000 | 服务端口 |
+
+#### 数据持久化
+
+- `data/` - 笔记数据存储目录
+- `uploads/` - 上传图片存储目录
+
+使用 `-v` 参数挂载本地目录可实现数据持久化。
+
 ## 浏览器支持
 
 - Chrome (推荐)

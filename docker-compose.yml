@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  note-taking:
+    build: .
+    container_name: note-taking
+    image: note-taking:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/notes"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
