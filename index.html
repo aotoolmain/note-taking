@@ -21,8 +21,8 @@
 <body class="h-screen flex flex-col" style="background-color: var(--bg-primary); color: var(--text-primary);">
 <header class="px-4 py-3 flex justify-between items-center" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
     <div class="flex items-center gap-2">
-        <i class="fa fa-feather-alt text-blue-400 text-xl"></i>
-        <h1 class="font-bold text-gray-100">我的笔记</h1>
+        <i class="fa fa-book text-blue-400 text-xl"></i>
+        <h1 class="font-bold" style="color: var(--text-primary);">我的笔记</h1>
     </div>
     <div class="flex gap-2 items-center">
         <button id="exportPdf" class="btn btn-pdf"><i class="fa fa-file-pdf-o"></i>导出PDF</button>
@@ -34,6 +34,11 @@
             </button>
             <button id="theme-light" class="theme-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="亮色主题">
                 <i class="fa fa-sun-o"></i>
+            </button>
+        </div>
+        <div class="ml-2 flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
+            <button id="shortcutBtn" class="p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="快捷键帮助">
+                <i class="fa fa-keyboard-o"></i>
             </button>
         </div>
     </div>
@@ -74,10 +79,11 @@
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col p-4" style="background-color: var(--bg-secondary);">
+    <div class="flex-1 flex flex-col p-3" style="background-color: var(--bg-secondary);">
         <div class="flex-1 rounded-lg overflow-hidden flex flex-col" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
-            <div class="flex items-center justify-between px-4 py-3" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+            <div class="flex items-center justify-between px-2 py-2" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
                 <div class="editor-toolbar" id="toolbar">
+
                     <button class="tool-btn" data-action="bold" title="粗体 Ctrl+B"><i class="fa fa-bold"></i><span>粗体</span><kbd>Ctrl+B</kbd></button>
                     <button class="tool-btn" data-action="italic" title="斜体 Ctrl+I"><i class="fa fa-italic"></i><span>斜体</span><kbd>Ctrl+I</kbd></button>
                     <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+S"><i class="fa fa-strikethrough"></i><span>删除线</span><kbd>Ctrl+S</kbd></button>
@@ -98,11 +104,15 @@
                     <button class="tool-btn" data-action="quote" title="引用 Ctrl+Q"><i class="fa fa-quote-right"></i><span>引用</span><kbd>Ctrl+Q</kbd></button>
                     <button class="tool-btn" data-action="table" title="表格 Ctrl+E"><i class="fa fa-table"></i><span>表格</span><kbd>Ctrl+E</kbd></button>
                     <button class="tool-btn" data-action="hr" title="分割线 Ctrl+-"><i class="fa fa-minus"></i><span>分割线</span><kbd>Ctrl+-</kbd></button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" id="undoBtn" title="撤销 Ctrl+Z"><i class="fa fa-undo"></i><span>撤销</span><kbd>Ctrl+Z</kbd></button>
+                    <button class="tool-btn" id="redoBtn" title="重做 Ctrl+Shift+Z"><i class="fa fa-repeat"></i><span>重做</span><kbd>Ctrl+Shift+Z</kbd></button>
+             
                 </div>
                 <div class="flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
-                    <button id="layoutEditor" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑模式">
-                        <i class="fa fa-pencil"></i>
-                    </button>
+                <button id="layoutEditor" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑模式">
+                    <i class="fa fa-pencil"></i>
+                </button>
                     <button id="layoutBoth" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑+预览">
                         <i class="fa fa-columns"></i>
                     </button>
@@ -116,13 +126,13 @@
                     <div class="pane-header px-4 py-2 flex items-center gap-2 text-sm" style="background-color: var(--bg-secondary); color: var(--text-muted);">
                         <i class="fa fa-pen-fancy"></i> 编辑器 · Markdown 源文本
                     </div>
-                    <textarea id="editor" class="flex-1 w-full p-4 font-mono text-sm resize-none border-none outline-none" style="background-color: var(--bg-primary); color: var(--text-primary);" placeholder="# 开始编写你的笔记..."></textarea>
+                    <textarea id="editor" class="flex-1 w-full p-3 font-mono text-sm resize-none border-none outline-none" style="background-color: var(--bg-primary); color: var(--text-primary);" placeholder="# 开始编写你的笔记..."></textarea>
                 </div>
                 <div id="previewPanel" class="flex-1 flex flex-col" style="border-left: 1px solid var(--border-color);">
                     <div class="pane-header px-4 py-2 flex items-center gap-2 text-sm" style="background-color: var(--bg-secondary); color: var(--text-muted);">
                         <i class="fa fa-eye"></i> 实时预览 · 渲染效果
                     </div>
-                    <div id="preview" class="flex-1 overflow-auto p-4 markdown-body"></div>
+                    <div id="preview" class="flex-1 overflow-auto p-3 markdown-body"></div>
                 </div>
             </div>
         </div>
@@ -177,6 +187,145 @@
     </div>
 </div>
 
-<script src="script.js?v=4"></script>
+<div id="shortcutDrawer" class="fixed inset-y-0 right-0 w-80 bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
+    <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-gray-100">快捷键帮助</h2>
+            <button id="closeShortcutBtn" class="text-gray-400 hover:text-gray-200 transition">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">编辑操作</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">撤销</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Z</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">重做</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Shift+Z</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">复制</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+C</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">粘贴</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+V</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">剪切</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+X</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">全选</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+A</kbd>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">文本格式化</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">粗体</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+B</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">斜体</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+I</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">删除线</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+S</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">行内代码</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+`</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">代码块</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Shift+C</kbd>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">标题</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">一级标题</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+1</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">二级标题</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+2</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">三级标题</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+3</kbd>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">列表</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">无序列表</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+L</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">有序列表</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+O</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">待办事项</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+T</kbd>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">插入内容</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">链接</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+K</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">图片</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+G</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">引用</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+Q</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">表格</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+E</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">分割线</span>
+                        <kbd class="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">Ctrl+-</kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="shortcutOverlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
+
+<script src="js/ui-utils.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notes-api.js"></script>
+<script src="js/export.js"></script>
+<script src="js/bind-events.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
