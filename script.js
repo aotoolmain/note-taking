@@ -413,6 +413,32 @@ async function init() {
         updatePreview();
     });
     
+    editor.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            switch(e.key.toLowerCase()) {
+                case 'b': handleToolAction('bold'); break;
+                case 'i': handleToolAction('italic'); break;
+                case 's': handleToolAction('strikethrough'); break;
+                case '1': handleToolAction('h1'); break;
+                case '2': handleToolAction('h2'); break;
+                case '3': handleToolAction('h3'); break;
+                case 'l': handleToolAction('ulist'); break;
+                case 'o': handleToolAction('olist'); break;
+                case 't': handleToolAction('task'); break;
+                case 'k': handleToolAction('link'); break;
+                case 'g': handleToolAction('image'); break;
+                case 'q': handleToolAction('quote'); break;
+                case 'e': handleToolAction('table'); break;
+                case '-': handleToolAction('hr'); break;
+                case '`': handleToolAction('code'); break;
+            }
+            if (e.shiftKey && e.key.toLowerCase() === 'c') {
+                handleToolAction('codeblock');
+            }
+        }
+    });
+    
     const buttons = document.querySelectorAll('.tool-btn');
     buttons.forEach(btn => {
         btn.addEventListener('click', (e) => {

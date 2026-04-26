@@ -274,6 +274,24 @@
 .tool-btn:active {
     transform: scale(0.96);
 }
+.tool-btn kbd {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.tool-btn:hover kbd {
+    background: var(--bg-card-hover);
+    color: var(--text-secondary);
+}
+.tool-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border-color);
+    margin: 0 4px;
+}
 
 .drop-target {
     background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));

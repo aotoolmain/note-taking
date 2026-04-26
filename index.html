@@ -78,22 +78,26 @@
         <div class="flex-1 rounded-lg overflow-hidden flex flex-col" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
             <div class="flex items-center justify-between px-4 py-3" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
                 <div class="editor-toolbar" id="toolbar">
-                    <button class="tool-btn" data-action="h1"><i class="fa fa-heading"></i><span>H1</span></button>
-                    <button class="tool-btn" data-action="h2"><i class="fa fa-heading"></i><span>H2</span></button>
-                    <button class="tool-btn" data-action="h3"><i class="fa fa-heading"></i><span>H3</span></button>
-                    <button class="tool-btn" data-action="bold"><i class="fa fa-bold"></i><span>粗体</span></button>
-                    <button class="tool-btn" data-action="italic"><i class="fa fa-italic"></i><span>斜体</span></button>
-                    <button class="tool-btn" data-action="strikethrough"><i class="fa fa-strikethrough"></i><span>删除线</span></button>
-                    <button class="tool-btn" data-action="ulist"><i class="fa fa-list-ul"></i><span>无序</span></button>
-                    <button class="tool-btn" data-action="olist"><i class="fa fa-list-ol"></i><span>有序</span></button>
-                    <button class="tool-btn" data-action="link"><i class="fa fa-link"></i><span>链接</span></button>
-                    <button class="tool-btn" data-action="image"><i class="fa fa-image"></i><span>图片</span></button>
-                    <button class="tool-btn" data-action="codeblock"><i class="fa fa-code"></i><span>代码块</span></button>
-                    <button class="tool-btn" data-action="quote"><i class="fa fa-quote-right"></i><span>引用</span></button>
-                    <button class="tool-btn" data-action="hr"><i class="fa fa-minus"></i><span>分割线</span></button>
-                    <button class="tool-btn" data-action="table"><i class="fa fa-table"></i><span>表格</span></button>
-                    <button class="tool-btn" data-action="code"><i class="fa fa-code"></i><span>行内代码</span></button>
-                    <button class="tool-btn" data-action="task"><i class="fa fa-square-o"></i><span>待办</span></button>
+                    <button class="tool-btn" data-action="bold" title="粗体 Ctrl+B"><i class="fa fa-bold"></i><span>粗体</span><kbd>Ctrl+B</kbd></button>
+                    <button class="tool-btn" data-action="italic" title="斜体 Ctrl+I"><i class="fa fa-italic"></i><span>斜体</span><kbd>Ctrl+I</kbd></button>
+                    <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+S"><i class="fa fa-strikethrough"></i><span>删除线</span><kbd>Ctrl+S</kbd></button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" data-action="h1" title="一级标题 Ctrl+1"><i class="fa fa-header"></i><span>H1</span><kbd>Ctrl+1</kbd></button>
+                    <button class="tool-btn" data-action="h2" title="二级标题 Ctrl+2"><i class="fa fa-header"></i><span>H2</span><kbd>Ctrl+2</kbd></button>
+                    <button class="tool-btn" data-action="h3" title="三级标题 Ctrl+3"><i class="fa fa-header"></i><span>H3</span><kbd>Ctrl+3</kbd></button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" data-action="ulist" title="无序列表 Ctrl+L"><i class="fa fa-list-ul"></i><span>无序</span><kbd>Ctrl+L</kbd></button>
+                    <button class="tool-btn" data-action="olist" title="有序列表 Ctrl+O"><i class="fa fa-list-ol"></i><span>有序</span><kbd>Ctrl+O</kbd></button>
+                    <button class="tool-btn" data-action="task" title="待办事项 Ctrl+T"><i class="fa fa-square-o"></i><span>待办</span><kbd>Ctrl+T</kbd></button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" data-action="link" title="链接 Ctrl+K"><i class="fa fa-link"></i><span>链接</span><kbd>Ctrl+K</kbd></button>
+                    <button class="tool-btn" data-action="image" title="图片 Ctrl+G"><i class="fa fa-image"></i><span>图片</span><kbd>Ctrl+G</kbd></button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" data-action="code" title="行内代码 Ctrl+`"><i class="fa fa-code"></i><span>代码</span><kbd>Ctrl+`</kbd></button>
+                    <button class="tool-btn" data-action="codeblock" title="代码块 Ctrl+Shift+C"><i class="fa fa-code-fork"></i><span>代码块</span><kbd>Ctrl+Shift+C</kbd></button>
+                    <button class="tool-btn" data-action="quote" title="引用 Ctrl+Q"><i class="fa fa-quote-right"></i><span>引用</span><kbd>Ctrl+Q</kbd></button>
+                    <button class="tool-btn" data-action="table" title="表格 Ctrl+E"><i class="fa fa-table"></i><span>表格</span><kbd>Ctrl+E</kbd></button>
+                    <button class="tool-btn" data-action="hr" title="分割线 Ctrl+-"><i class="fa fa-minus"></i><span>分割线</span><kbd>Ctrl+-</kbd></button>
                 </div>
                 <div class="flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
                     <button id="layoutEditor" class="layout-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="编辑模式">
