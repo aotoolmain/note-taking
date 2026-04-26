@@ -37,7 +37,8 @@
     --bg-secondary: #161b22;
     --bg-tertiary: #21262d;
     --bg-card: #1c2128;
-    --bg-card-hover: #21262d;
+    --bg-card-hover: #2d333b;
+    --bg-card-active: #30363d;
     --text-primary: #e6edf3;
     --text-secondary: #8b949e;
     --text-muted: #6e7681;

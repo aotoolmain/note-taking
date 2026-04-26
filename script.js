@@ -464,9 +464,9 @@ async function loadNotes() {
         item.onmouseout = function() { if (!this.classList.contains('active')) { this.style.backgroundColor = 'var(--bg-secondary)'; this.style.borderLeft = '3px solid transparent'; } };
         if (currentId === note.id) {
             item.classList.add("active");
-            item.style.backgroundColor = 'var(--bg-card-hover)';
+            item.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))';
             item.style.borderLeft = '3px solid var(--accent)';
-            item.onmouseout = function() { if (this.classList.contains('active')) { this.style.backgroundColor = 'var(--bg-card-hover)'; this.style.borderLeft = '3px solid var(--accent)'; } };
+            item.onmouseout = function() { if (this.classList.contains('active')) { this.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))'; this.style.borderLeft = '3px solid var(--accent)'; } };
         }
         
         item.ondragstart = (e) => {
@@ -702,8 +702,8 @@ async function loadCate() {
         d.onmouseout = function() { if (!this.classList.contains('active')) this.style.backgroundColor = 'transparent'; };
         if (currentCateId === String(cat.id)) {
             d.classList.add("active");
-            d.style.backgroundColor = 'var(--bg-card-hover)';
-            d.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-hover)'; };
+            d.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))';
+            d.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))'; };
         }
         d.dataset.cateId = cat.id;
         
@@ -861,8 +861,8 @@ function selectCategory(cateId) {
     const activeItem = document.querySelector(`[data-cate-id="${cateId}"]`);
     if (activeItem) {
         activeItem.classList.add("active");
-        activeItem.style.backgroundColor = 'var(--bg-card-hover)';
-        activeItem.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-hover)'; };
+        activeItem.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))';
+        activeItem.onmouseout = function() { if (this.classList.contains('active')) this.style.backgroundColor = 'var(--bg-card-active, var(--bg-card-hover))'; };
     }
     
     currentCateId = String(cateId);
