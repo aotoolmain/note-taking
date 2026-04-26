@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>✨ 我的笔记</title>
+    <script src="lib/tailwindcss/tailwind.js"></script>
+    <link rel="stylesheet" href="lib/font-awesome/font-awesome.min.css">
+    <script src="lib/jspdf/jspdf.min.js"></script>
+    <script src="lib/html2canvas/html2canvas.min.js"></script>
+    <script src="lib/marked/marked.min.js"></script>
+    <script src="lib/highlightjs/highlight.min.js"></script>
+    <link rel="stylesheet" href="lib/highlightjs/github-dark.min.css">
+    <script src="lib/dompurify/purify.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#2563eb' } } }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-screen flex flex-col bg-gray-900 text-gray-100">
+<header class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+        <i class="fa fa-feather-alt text-blue-400 text-xl"></i>
+        <h1 class="font-bold text-gray-100">我的笔记</h1>
+    </div>
+    <div class="flex gap-2 items-center">
+        <button id="exportPdf" class="btn btn-pdf"><i class="fa fa-file-pdf-o"></i>导出PDF</button>
+        <button id="exportHtml" class="btn btn-html"><i class="fa fa-code"></i>导出HTML</button>
+        <button id="exportMd" class="btn btn-md"><i class="fa fa-file-text-o"></i>导出MD</button>
+    </div>
+</header>
+
+<div class="flex flex-1 overflow-hidden">
+    <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div class="category-section bg-gray-700/50 border border-gray-600 rounded-lg mx-3 mt-3 p-3">
+            <div class="relative mb-3">
+                <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input id="search" placeholder="搜索笔记..." class="w-full pl-9 pr-10 py-1.5 border border-gray-600 rounded text-sm outline-none bg-gray-800 text-gray-100">
+                <button id="clearSearch" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 hidden" style="background: none; border: none; cursor: pointer;">
+                    <i class="fa fa-times-circle"></i>
+                </button>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-600 mb-2 pb-2">
+                <h3 class="font-medium text-gray-300">分类</h3>
+                <button id="addCategory" class="text-blue-400"><i class="fa fa-plus-circle"></i></button>
+            </div>
+            <div id="categoryList" class="space-y-1">
+                <div class="p-2 rounded hover:bg-gray-600 cursor-pointer active bg-gray-600" data-cate-id="all">
+                    <i class="fa fa-folder-open-o mr-2 text-blue-400"></i>全部笔记
+                </div>
+            </div>
+        </div>
+        <div class="notes-section bg-gray-700/50 border border-gray-600 rounded-lg mx-3 mt-3 p-3 flex-1">
+            <div class="flex justify-between items-center border-b border-gray-600 mb-2 pb-2">
+                <h3 class="font-medium text-gray-300">笔记列表</h3>
+                <button id="newNoteSide" class="text-blue-400"><i class="fa fa-plus-circle"></i></button>
+            </div>
+            <div class="notes-section-content">
+                <div id="noteList" class="space-y-1"></div>
+                <div id="empty" class="text-gray-500 text-center py-10">
+                    <i class="fa fa-file-text-o text-3xl mb-2"></i>
+                    <p>暂无笔记</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col p-4 bg-gray-800">
+        <div class="flex-1 bg-gray-700/30 border border-gray-600 rounded-lg overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-4 py-3 bg-gray-700/50 border-b border-gray-600">
+                <div class="editor-toolbar" id="toolbar">
+                    <button class="tool-btn" data-action="h1"><i class="fa fa-heading"></i><span>H1</span></button>
+                    <button class="tool-btn" data-action="h2"><i class="fa fa-heading"></i><span>H2</span></button>
+                    <button class="tool-btn" data-action="h3"><i class="fa fa-heading"></i><span>H3</span></button>
+                    <button class="tool-btn" data-action="bold"><i class="fa fa-bold"></i><span>粗体</span></button>
+                    <button class="tool-btn" data-action="italic"><i class="fa fa-italic"></i><span>斜体</span></button>
+                    <button class="tool-btn" data-action="strikethrough"><i class="fa fa-strikethrough"></i><span>删除线</span></button>
+                    <button class="tool-btn" data-action="ulist"><i class="fa fa-list-ul"></i><span>无序</span></button>
+                    <button class="tool-btn" data-action="olist"><i class="fa fa-list-ol"></i><span>有序</span></button>
+                    <button class="tool-btn" data-action="link"><i class="fa fa-link"></i><span>链接</span></button>
+                    <button class="tool-btn" data-action="image"><i class="fa fa-image"></i><span>图片</span></button>
+                    <button class="tool-btn" data-action="codeblock"><i class="fa fa-code"></i><span>代码块</span></button>
+                    <button class="tool-btn" data-action="quote"><i class="fa fa-quote-right"></i><span>引用</span></button>
+                    <button class="tool-btn" data-action="hr"><i class="fa fa-minus"></i><span>分割线</span></button>
+                    <button class="tool-btn" data-action="table"><i class="fa fa-table"></i><span>表格</span></button>
+                    <button class="tool-btn" data-action="code"><i class="fa fa-code"></i><span>行内代码</span></button>
+                    <button class="tool-btn" data-action="task"><i class="fa fa-square-o"></i><span>待办</span></button>
+                </div>
+                <div class="flex items-center gap-1 bg-gray-700/50 rounded-lg p-1">
+                    <button id="layoutEditor" class="layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition" title="编辑模式">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button id="layoutBoth" class="layout-btn p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-600 transition" title="编辑+预览">
+                        <i class="fa fa-columns"></i>
+                    </button>
+                    <button id="layoutPreview" class="layout-btn p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition" title="预览模式">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 overflow-hidden flex">
+                <div id="editorPanel" class="flex-1 flex flex-col hidden">
+                    <div class="pane-header bg-gray-700/30 px-4 py-2 flex items-center gap-2 text-sm text-gray-400">
+                        <i class="fa fa-pen-fancy"></i> 编辑器 · Markdown 源文本
+                    </div>
+                    <textarea id="editor" class="flex-1 w-full p-4 font-mono text-sm resize-none border-none outline-none bg-gray-800 text-gray-100" placeholder="# 开始编写你的笔记..."></textarea>
+                </div>
+                <div id="previewPanel" class="flex-1 flex flex-col border-l border-gray-600">
+                    <div class="pane-header bg-gray-700/30 px-4 py-2 flex items-center gap-2 text-sm text-gray-400">
+                        <i class="fa fa-eye"></i> 实时预览 · 渲染效果
+                    </div>
+                    <div id="preview" class="flex-1 overflow-auto p-4 markdown-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg shadow-xl w-96 p-6 transform transition-all">
+        <div class="flex items-center justify-center mb-4">
+            <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+                <i class="fa fa-exclamation-triangle text-red-500 text-3xl"></i>
+            </div>
+        </div>
+        <h3 id="confirmTitle" class="text-lg font-medium text-gray-100 text-center mb-2">确认删除</h3>
+        <p id="confirmMessage" class="text-gray-400 text-center mb-6"></p>
+        <div class="flex gap-3">
+            <button id="confirmCancel" class="flex-1 btn btn-outline justify-center bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600">取消</button>
+            <button id="confirmOk" class="flex-1 btn btn-pdf justify-center">确认删除</button>
+        </div>
+    </div>
+</div>
+
+<div id="alertModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg shadow-xl w-96 p-6 transform transition-all">
+        <div class="flex items-center justify-center mb-4">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <i class="fa fa-info-circle text-blue-500 text-3xl"></i>
+            </div>
+        </div>
+        <h3 id="alertTitle" class="text-lg font-medium text-gray-100 text-center mb-2">提示</h3>
+        <p id="alertMessage" class="text-gray-400 text-center mb-6"></p>
+        <div class="flex gap-3">
+            <button id="alertOk" class="flex-1 btn bg-blue-500 hover:bg-blue-600 text-white justify-center">确定</button>
+        </div>
+    </div>
+</div>
+
+<div id="promptModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg shadow-xl w-96 p-6 transform transition-all">
+        <div class="flex items-center justify-center mb-4">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <i id="promptIcon" class="fa fa-pencil text-blue-500 text-3xl"></i>
+            </div>
+        </div>
+        <h3 id="promptTitle" class="text-lg font-medium text-gray-100 text-center mb-2">输入</h3>
+        <p id="promptMessage" class="text-gray-400 text-center mb-4"></p>
+        <input id="promptInput" type="text" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 mb-4" placeholder="请输入内容">
+        <div class="flex gap-3">
+            <button id="promptCancel" class="flex-1 btn btn-outline justify-center bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600">取消</button>
+            <button id="promptOk" class="flex-1 btn bg-blue-500 hover:bg-blue-600 text-white justify-center">确定</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js?v=4"></script>
+</body>
+</html>
