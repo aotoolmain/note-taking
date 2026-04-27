@@ -189,11 +189,10 @@ function addOrderedList() {
 }
 
 async function insertLink() {
-    const url = await showPrompt('插入链接', '请输入链接地址', 'https://', 'fa-link');
-    if (!url) return;
-    let text = await showPrompt('插入链接', '请输入链接文字', '链接描述', 'fa-file-text-o');
-    if (!text) text = url;
-    const linkMarkdown = `[${text}](${url})`;
+    const result = await showLinkPrompt('插入链接', '请输入链接信息');
+    if (!result || !result.url) return;
+    const text = result.text || result.url;
+    const linkMarkdown = `[${text}](${result.url})`;
     replaceSelectedText(linkMarkdown, true);
 }
 

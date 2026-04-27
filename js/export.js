@@ -36,6 +36,41 @@ async function exportPdf() {
     const rawMarkdown = document.getElementById('editor').value;
     const content = await markdownToHtml(rawMarkdown);
     
+    function convertLists(html) {
+        let result = html;
+        const ulRegex = /<ul>([\s\S]*?)<\/ul>/gi;
+        const olRegex = /<ol>([\s\S]*?)<\/ol>/gi;
+        
+        result = result.replace(ulRegex, (match, content) => {
+            const liRegex = /<li>([\s\S]*?)<\/li>/gi;
+            let items = [];
+            let liMatch;
+            while ((liMatch = liRegex.exec(content)) !== null) {
+                items.push(liMatch[1]);
+            }
+            let htmlItems = items.map(item => `<div style="display: flex; margin-bottom: 8px;"><span style="width: 20px; flex-shrink: 0;">•</span><span>${item}</span></div>`).join('');
+            return `<div style="margin: 12px 0;">${htmlItems}</div>`;
+        });
+        
+        result = result.replace(olRegex, (match, content) => {
+            const liRegex = /<li>([\s\S]*?)<\/li>/gi;
+            let items = [];
+            let liMatch;
+            while ((liMatch = liRegex.exec(content)) !== null) {
+                items.push(liMatch[1]);
+            }
+            let htmlItems = items.map((item, index) => `<div style="display: flex; margin-bottom: 8px;"><span style="width: 32px; flex-shrink: 0;">${index + 1}.</span><span>${item}</span></div>`).join('');
+            return `<div style="margin: 12px 0;">${htmlItems}</div>`;
+        });
+        
+        return result;
+    }
+    
+    let processedContent = content;
+    processedContent = processedContent.replace(/<\/h1>/g, '</h1><div style="height: 2px; background-color: #3b82f6; margin-top: -8px; margin-bottom: 16px;"></div>');
+    processedContent = processedContent.replace(/<\/h2>/g, '</h2><div style="height: 1px; background-color: #ddd; margin-top: -6px; margin-bottom: 14px;"></div>');
+    processedContent = convertLists(processedContent);
+    
     const pdfContent = document.createElement("div");
     pdfContent.style.cssText = 'position: fixed; top: -1000px; left: -1000px; background: white;';
     pdfContent.innerHTML = `
@@ -50,15 +85,13 @@ async function exportPdf() {
             .pdf-content table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
             .pdf-content th, .pdf-content td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
             .pdf-content th { background-color: #f8f9fa; font-weight: 600; }
-            .pdf-content ul, .pdf-content ol { padding-left: 28px; margin: 12px 0; }
-            .pdf-content li { margin-bottom: 6px; }
             .pdf-content pre { background: #2d2d2d; padding: 16px; border-radius: 6px; overflow-x: auto; margin: 16px 0; }
             .pdf-content code { font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; font-size: 13px; }
             .pdf-content pre code { color: #ccc; }
             .pdf-content blockquote { border-left: 4px solid #3b82f6; padding: 12px 16px; color: #666; margin: 16px 0; background: #f8fafc; border-radius: 0 4px 4px 0; }
-            .pdf-content h1 { font-size: 22px; margin: 24px 0 12px; color: #1a1a2e; }
-            .pdf-content h2 { font-size: 20px; margin: 20px 0 10px; color: #1a1a2e; }
-            .pdf-content h3 { font-size: 18px; margin: 18px 0 8px; color: #1a1a2e; }
+            .pdf-content h1 { font-size: 22px; margin: 28px 0 6px; color: #1a1a2e; }
+            .pdf-content h2 { font-size: 20px; margin: 24px 0 6px; color: #1a1a2e; }
+            .pdf-content h3 { font-size: 18px; margin: 20px 0 10px; color: #1a1a2e; }
             .pdf-content h4, .pdf-content h5, .pdf-content h6 { font-size: 16px; margin: 16px 0 8px; color: #1a1a2e; }
             .pdf-content a { color: #3b82f6; text-decoration: none; }
             .pdf-content a:hover { text-decoration: underline; }
@@ -73,7 +106,7 @@ async function exportPdf() {
                 <span>创建时间：${time}</span>
             </div>
             <div class="pdf-title">${title}</div>
-            <div class="pdf-content">${content}</div>
+            <div class="pdf-content">${processedContent}</div>
         </div>
     `;
     

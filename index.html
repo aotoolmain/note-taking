@@ -89,7 +89,7 @@
 
                     <button class="tool-btn" data-action="bold" title="粗体 Ctrl+B"><i class="fa fa-bold"></i><span>粗体</span><kbd>Ctrl+B</kbd></button>
                     <button class="tool-btn" data-action="italic" title="斜体 Ctrl+I"><i class="fa fa-italic"></i><span>斜体</span><kbd>Ctrl+I</kbd></button>
-                    <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+S"><i class="fa fa-strikethrough"></i><span>删除线</span><kbd>Ctrl+S</kbd></button>
+                    <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+Shift+S"><i class="fa fa-strikethrough"></i><span>删除线</span><kbd>Ctrl+Shift+S</kbd></button>
                     <div class="tool-divider"></div>
                     <button class="tool-btn" data-action="h1" title="一级标题 Ctrl+1"><i class="fa fa-header"></i><span>H1</span><kbd>Ctrl+1</kbd></button>
                     <button class="tool-btn" data-action="h2" title="二级标题 Ctrl+2"><i class="fa fa-header"></i><span>H2</span><kbd>Ctrl+2</kbd></button>
@@ -243,6 +243,10 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">删除线</span>
+                        <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+Shift+S</kbd>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span style="color: var(--text-secondary);">保存</span>
                         <kbd class="px-2 py-1 rounded text-sm" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Ctrl+S</kbd>
                     </div>
                     <div class="flex justify-between items-center">
@@ -323,12 +327,12 @@
 
 <div id="shortcutOverlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
 
-<script src="js/main.js"></script>
-    <script src="js/ui-utils.js"></script>
+<script src="js/ui-utils.js"></script>
     <script src="js/editor.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/notes-api.js"></script>
     <script src="js/export.js"></script>
     <script src="js/bind-events.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

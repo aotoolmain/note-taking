@@ -46,28 +46,115 @@ function showAlert(message) {
     });
 }
 
+function showLinkPrompt(title, message) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById("promptModal");
+        const titleEl = document.getElementById("promptTitle");
+        const messageEl = document.getElementById("promptMessage");
+        const iconEl = document.getElementById("promptIcon");
+        const okBtn = document.getElementById("promptOk");
+        const cancelBtn = document.getElementById("promptCancel");
+        
+        const existingSelect = document.getElementById("promptSelectInput");
+        const existingDropdown = document.getElementById("promptSelectDropdown");
+        const oldInput1 = document.getElementById("promptInput");
+        const oldInput2 = document.getElementById("promptInput2");
+        
+        if (existingSelect) existingSelect.remove();
+        if (existingDropdown) existingDropdown.remove();
+        if (oldInput1) oldInput1.remove();
+        if (oldInput2) oldInput2.remove();
+        
+        const urlInput = document.createElement('input');
+        urlInput.id = 'promptInput';
+        urlInput.type = 'text';
+        urlInput.className = 'w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 mb-3';
+        urlInput.placeholder = '请输入链接地址';
+        
+        const textInput = document.createElement('input');
+        textInput.id = 'promptInput2';
+        textInput.type = 'text';
+        textInput.className = 'w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 mb-4';
+        textInput.placeholder = '请输入链接描述（可选）';
+        
+        const btnContainer = modal.querySelector('.flex.gap-3');
+        btnContainer.parentNode.insertBefore(textInput, btnContainer);
+        btnContainer.parentNode.insertBefore(urlInput, textInput);
+        
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        urlInput.value = '';
+        textInput.value = '';
+        iconEl.className = 'fa fa-link text-blue-500 text-3xl';
+        modal.style.display = "flex";
+        urlInput.focus();
+        
+        const handleOk = () => {
+            modal.style.display = "none";
+            okBtn.removeEventListener("click", handleOk);
+            cancelBtn.removeEventListener("click", handleCancel);
+            urlInput.removeEventListener("keydown", handleKeydown);
+            textInput.removeEventListener("keydown", handleKeydown);
+            urlInput.remove();
+            textInput.remove();
+            resolve({ url: urlInput.value || null, text: textInput.value || null });
+        };
+        
+        const handleCancel = () => {
+            modal.style.display = "none";
+            okBtn.removeEventListener("click", handleOk);
+            cancelBtn.removeEventListener("click", handleCancel);
+            urlInput.removeEventListener("keydown", handleKeydown);
+            textInput.removeEventListener("keydown", handleKeydown);
+            urlInput.remove();
+            textInput.remove();
+            resolve(null);
+        };
+        
+        const handleKeydown = (e) => {
+            if (e.key === 'Enter') {
+                handleOk();
+            } else if (e.key === 'Escape') {
+                handleCancel();
+            }
+        };
+        
+        okBtn.addEventListener("click", handleOk);
+        cancelBtn.addEventListener("click", handleCancel);
+        urlInput.addEventListener("keydown", handleKeydown);
+        textInput.addEventListener("keydown", handleKeydown);
+    });
+}
+
 function showPrompt(title, message, placeholder = '', icon = 'fa-pencil') {
     return new Promise((resolve) => {
         const modal = document.getElementById("promptModal");
         const titleEl = document.getElementById("promptTitle");
         const messageEl = document.getElementById("promptMessage");
-        let inputEl = document.getElementById("promptInput");
         const iconEl = document.getElementById("promptIcon");
         const okBtn = document.getElementById("promptOk");
         const cancelBtn = document.getElementById("promptCancel");
         
-        if (!inputEl) {
-            const container = document.createElement('div');
-            container.innerHTML = '<input id="promptInput" type="text" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 mb-4" placeholder="请输入内容">';
-            const btnContainer = document.querySelector('.flex.gap-3');
-            btnContainer.parentNode.insertBefore(container.firstChild, btnContainer);
-            inputEl = document.getElementById("promptInput");
-        }
+        const existingSelect = document.getElementById("promptSelectInput");
+        const existingDropdown = document.getElementById("promptSelectDropdown");
+        const oldInput = document.getElementById("promptInput");
+        
+        if (existingSelect) existingSelect.remove();
+        if (existingDropdown) existingDropdown.remove();
+        if (oldInput) oldInput.remove();
+        
+        const inputEl = document.createElement('input');
+        inputEl.id = 'promptInput';
+        inputEl.type = 'text';
+        inputEl.className = 'w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 mb-4';
+        inputEl.placeholder = placeholder;
+        
+        const btnContainer = modal.querySelector('.flex.gap-3');
+        btnContainer.parentNode.insertBefore(inputEl, btnContainer);
         
         titleEl.textContent = title;
         messageEl.textContent = message;
         inputEl.value = '';
-        inputEl.placeholder = placeholder;
         iconEl.className = `fa ${icon} text-blue-500 text-3xl`;
         modal.style.display = "flex";
         inputEl.focus();
@@ -76,6 +163,8 @@ function showPrompt(title, message, placeholder = '', icon = 'fa-pencil') {
             modal.style.display = "none";
             okBtn.removeEventListener("click", handleOk);
             cancelBtn.removeEventListener("click", handleCancel);
+            inputEl.removeEventListener("keydown", handleKeydown);
+            inputEl.remove();
             resolve(inputEl.value || null);
         };
         
@@ -83,6 +172,8 @@ function showPrompt(title, message, placeholder = '', icon = 'fa-pencil') {
             modal.style.display = "none";
             okBtn.removeEventListener("click", handleOk);
             cancelBtn.removeEventListener("click", handleCancel);
+            inputEl.removeEventListener("keydown", handleKeydown);
+            inputEl.remove();
             resolve(null);
         };
         

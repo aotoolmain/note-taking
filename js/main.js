@@ -26,8 +26,6 @@ marked.setOptions({
     langPrefix: 'language-'
 });
 
-console.log('codeFormatter available:', !!window.codeFormatter);
-
 marked.use({
     renderer: {
         code: function(text, lang, escaped) {
@@ -182,74 +180,134 @@ function fallbackCopy(text, btn) {
     }
 }
 
-window.addEventListener("DOMContentLoaded", init);
+function saveEditorHistory(editor) {
+    if (!currentId) return;
+    const content = editor.value;
+    historyStack = historyStack.slice(0, historyIndex + 1);
+    historyStack.push({ content, timestamp: Date.now() });
+    historyIndex = historyStack.length - 1;
+    if (historyStack.length > 50) {
+        historyStack.shift();
+        historyIndex--;
+    }
+}
 
-async function init() {
-    setTheme(currentTheme);
-    await loadCate();
-    await loadNotes();
-    bindEvents();
-    setLayout(layoutMode);
+function handleEditorKeydown(editor, e) {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        handleTabKey(editor, e);
+        return;
+    }
     
-    const editor = document.getElementById('editor');
+    if (layoutMode === 2) {
+        return;
+    }
     
-    const saveHistory = () => {
-        if (!currentId) return;
-        const content = editor.value;
-        historyStack = historyStack.slice(0, historyIndex + 1);
-        historyStack.push({ content, timestamp: Date.now() });
-        historyIndex = historyStack.length - 1;
-        if (historyStack.length > 50) {
-            historyStack.shift();
-            historyIndex--;
+    if (e.ctrlKey || e.metaKey) {
+        handleCtrlKey(editor, e);
+    }
+}
+
+function handleTabKey(editor, e) {
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const value = editor.value;
+    
+    if (e.shiftKey) {
+        if (start === end) {
+            if (start >= 2 && value.substring(start - 2, start) === '  ') {
+                editor.value = value.substring(0, start - 2) + value.substring(start);
+                editor.selectionStart = editor.selectionEnd = start - 2;
+            }
+        } else {
+            const selectedText = value.substring(start, end);
+            const lines = selectedText.split('\n');
+            const unindentedLines = lines.map(line => 
+                line.startsWith('  ') ? line.substring(2) : line
+            );
+            const unindentedText = unindentedLines.join('\n');
+            editor.value = value.substring(0, start) + unindentedText + value.substring(end);
+            editor.selectionStart = start;
+            editor.selectionEnd = start + unindentedText.length;
         }
+    } else {
+        if (start === end) {
+            editor.value = value.substring(0, start) + '  ' + value.substring(end);
+            editor.selectionStart = editor.selectionEnd = start + 2;
+        } else {
+            const selectedText = value.substring(start, end);
+            const lines = selectedText.split('\n');
+            const indentedLines = lines.map(line => '  ' + line);
+            const indentedText = indentedLines.join('\n');
+            editor.value = value.substring(0, start) + indentedText + value.substring(end);
+            editor.selectionStart = start;
+            editor.selectionEnd = start + indentedText.length;
+        }
+    }
+    updatePreview();
+}
+
+function handleCtrlKey(editor, e) {
+    const key = e.key.toLowerCase();
+    
+    if (key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        if (typeof undo === 'function') undo();
+        return;
+    }
+    
+    if (key === 'z' && e.shiftKey) {
+        e.preventDefault();
+        if (typeof redo === 'function') redo();
+        return;
+    }
+    
+    if (key === 's') {
+        e.preventDefault();
+        if (e.shiftKey) {
+            if (typeof handleToolAction === 'function') handleToolAction('strikethrough');
+        } else {
+            if (typeof autoSave === 'function') autoSave();
+        }
+        return;
+    }
+    
+    const actionMap = {
+        'b': 'bold',
+        'i': 'italic',
+        '1': 'h1',
+        '2': 'h2',
+        '3': 'h3',
+        'l': 'ulist',
+        'o': 'olist',
+        't': 'task',
+        'k': 'link',
+        'g': 'image',
+        'q': 'quote',
+        'e': 'table',
+        '-': 'hr',
+        '`': 'code'
     };
+    
+    if (actionMap[key]) {
+        e.preventDefault();
+        if (typeof handleToolAction === 'function') handleToolAction(actionMap[key]);
+        return;
+    }
+    
+    if (e.shiftKey && key === 'c') {
+        e.preventDefault();
+        if (typeof insertCodeBlock === 'function') insertCodeBlock();
+    }
+}
 
+function bindEditorEvents(editor) {
     editor.addEventListener('keydown', function(e) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            const start = editor.selectionStart;
-            const end = editor.selectionEnd;
-            const value = editor.value;
-            editor.value = value.substring(0, start) + '\t' + value.substring(end);
-            editor.selectionStart = editor.selectionEnd = start + 1;
-            updatePreview();
-            return;
-        }
-        
-        if (layoutMode === 2) {
-            return;
-        }
-        
-        if (e.ctrlKey || e.metaKey) {
-            const handledKeys = ['b', 'i', 's', '1', '2', '3', 'l', 'o', 't', 'k', 'g', 'q', 'e', '-', '`'];
-            
-            if (e.key.toLowerCase() === 'z' && !e.shiftKey) {
-                e.preventDefault();
-                undo();
-                return;
-            }
-            
-            if (e.key.toLowerCase() === 'z' && e.shiftKey) {
-                e.preventDefault();
-                redo();
-                return;
-            }
-            
-            if (handledKeys.includes(e.key.toLowerCase())) {
-                e.preventDefault();
-                handleToolAction(e.key.toLowerCase());
-            }
-            
-            if (e.shiftKey && e.key.toLowerCase() === 'c') {
-                e.preventDefault();
-                insertCodeBlock();
-            }
-        }
+        handleEditorKeydown(editor, e);
     });
     
     editor.addEventListener('input', function() {
-        saveHistory();
+        saveEditorHistory(editor);
         autoSave();
         updatePreview();
     });
@@ -262,6 +320,18 @@ async function init() {
             if (action) handleToolAction(action);
         });
     });
+}
+
+async function init() {
+    setTheme(currentTheme);
+    await loadCate();
+    await loadNotes();
+    bindEvents();
+    setLayout(layoutMode);
     
+    const editor = document.getElementById('editor');
+    bindEditorEvents(editor);
     updatePreview();
 }
+
+window.addEventListener("DOMContentLoaded", init);
