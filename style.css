@@ -414,6 +414,22 @@
     margin: 0 4px;
 }
 
-.drop-target {
-    background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
+#categoryList .drop-target {
+    background-color: var(--bg-card-hover) !important;
+}
+
+.note-group-header:hover {
+    color: var(--text-secondary);
+}
+
+.note-group-container {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.note-group-container.collapsed {
+    max-height: 0;
+    opacity: 0;
 }

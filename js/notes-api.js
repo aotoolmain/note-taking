@@ -8,6 +8,60 @@ async function autoSave() {
     });
 }
 
+function getDateGroupLabel(dateStr) {
+    const noteDate = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const noteDateStart = new Date(noteDate);
+    noteDateStart.setHours(0, 0, 0, 0);
+    
+    const diffDays = Math.floor((noteDateStart - today) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+        return '今天';
+    } else if (diffDays === -1) {
+        return '昨天';
+    } else if (diffDays > 0) {
+        return `${diffDays}天后`;
+    } else {
+        return noteDate.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+}
+
+function groupNotesByDate(notes) {
+    const groups = {};
+    
+    notes.forEach(note => {
+        const label = getDateGroupLabel(note.time);
+        if (!groups[label]) {
+            groups[label] = [];
+        }
+        groups[label].push(note);
+    });
+    
+    const sortedGroups = Object.entries(groups).sort((a, b) => {
+        const order = ['今天', '昨天'];
+        const indexA = order.indexOf(a[0]);
+        const indexB = order.indexOf(b[0]);
+        
+        if (indexA !== -1 && indexB !== -1) {
+            return indexA - indexB;
+        } else if (indexA !== -1) {
+            return -1;
+        } else if (indexB !== -1) {
+            return 1;
+        } else {
+            return new Date(b[0]) - new Date(a[0]);
+        }
+    });
+    
+    return sortedGroups;
+}
+
 async function loadNotes() {
     const list = document.getElementById("noteList");
     const empty = document.getElementById("empty");
@@ -26,7 +80,43 @@ async function loadNotes() {
     }
     empty.style.display = "none";
     
-    notes.forEach(note => {
+    const groupedNotes = groupNotesByDate(notes);
+    
+    groupedNotes.forEach(([dateLabel, groupNotes], index) => {
+        const groupId = 'group-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        const isFirst = index === 0;
+        
+        const groupHeader = document.createElement("div");
+        groupHeader.className = "note-group-header flex items-center gap-2 py-2 px-1 cursor-pointer";
+        groupHeader.style.color = 'var(--text-muted)';
+        groupHeader.innerHTML = `
+            <i class="fa ${isFirst ? 'fa-chevron-down' : 'fa-chevron-right'} text-xs group-toggle-icon"></i>
+            <i class="fa fa-calendar-o text-xs"></i>
+            <span class="text-sm font-medium">${dateLabel}</span>
+            <span class="text-xs ml-auto opacity-60">${groupNotes.length} 篇</span>
+        `;
+        groupHeader.dataset.groupId = groupId;
+        
+        const groupContainer = document.createElement("div");
+        groupContainer.className = "note-group-container space-y-1 pl-4 mr-4" + (isFirst ? '' : ' collapsed');
+        groupContainer.id = groupId;
+        
+        groupHeader.addEventListener('click', function() {
+            const container = document.getElementById(this.dataset.groupId);
+            const icon = this.querySelector('.group-toggle-icon');
+            
+            if (container.classList.contains('collapsed')) {
+                container.classList.remove('collapsed');
+                icon.className = 'fa fa-chevron-down text-xs group-toggle-icon';
+            } else {
+                container.classList.add('collapsed');
+                icon.className = 'fa fa-chevron-right text-xs group-toggle-icon';
+            }
+        });
+        
+        list.appendChild(groupHeader);
+        
+        groupNotes.forEach(note => {
         const item = document.createElement("div");
         item.className = "note-item flex justify-between items-start";
         item.style.backgroundColor = 'var(--bg-secondary)';
@@ -207,7 +297,10 @@ async function loadNotes() {
             deleteBtn.style.opacity = "0";
             deleteBtn.style.pointerEvents = "none";
         });
-        list.appendChild(item);
+        groupContainer.appendChild(item);
+        });
+        
+        list.appendChild(groupContainer);
     });
 }
 
