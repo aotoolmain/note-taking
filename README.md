@@ -205,6 +205,83 @@ docker run -d \
 
 使用 `-v` 参数挂载本地目录可实现数据持久化。
 
+#### 更新 Docker 部署
+
+当代码更新后，需要重新构建镜像并启动容器：
+
+**Linux/macOS (Bash):**
+
+```bash
+# 方法一：使用 Docker Compose（推荐）
+cd /path/to/note-taking
+docker-compose down
+docker-compose build
+docker-compose up -d
+
+# 方法二：使用 Docker 命令
+docker stop note-taking
+docker rm note-taking
+docker rmi note-taking:latest
+docker build -t note-taking:latest .
+docker run -d \
+  --name note-taking \
+  -p 3000:3000 \
+  -v ./data:/app/data \
+  -v ./uploads:/app/uploads \
+  --restart unless-stopped \
+  note-taking:latest
+```
+
+**Windows (PowerShell):**
+
+```powershell
+# 方法一：使用 Docker Compose（推荐）
+Set-Location D:\path\to\note-taking
+docker-compose down
+docker-compose build
+docker-compose up -d
+
+# 方法二：使用 Docker 命令
+docker stop note-taking
+docker rm note-taking
+docker rmi note-taking:latest
+docker build -t note-taking:latest .
+docker run -d `
+  --name note-taking `
+  -p 3000:3000 `
+  -v ./data:/app/data `
+  -v ./uploads:/app/uploads `
+  --restart unless-stopped `
+  note-taking:latest
+```
+
+**注意事项：**
+
+1. **数据安全**：由于 `data` 和 `uploads` 目录通过卷挂载到容器外部，更新时数据不会丢失。
+
+2. **更新前备份**：建议在更新前备份 `data` 目录：
+   
+   Linux/macOS:
+   ```bash
+   cp -r data data_backup_$(date +%Y%m%d)
+   ```
+   
+   Windows PowerShell:
+   ```powershell
+   Copy-Item -Recurse data "data_backup_$(Get-Date -Format yyyyMMdd)"
+   ```
+
+3. **端口冲突**：如果端口 3000 被占用，需要先停止占用该端口的进程，然后再启动容器。
+
+4. **验证更新**：更新完成后可以通过以下命令验证：
+   ```bash
+   # 查看容器日志
+   docker logs note-taking
+   
+   # 检查容器状态
+   docker ps
+   ```
+
 ## 浏览器支持
 
 - Chrome (推荐)
