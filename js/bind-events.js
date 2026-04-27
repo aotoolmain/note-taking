@@ -27,6 +27,7 @@ function bindEvents() {
     document.getElementById("layoutBoth").onclick = () => setLayout(1);
     document.getElementById("layoutPreview").onclick = () => setLayout(2);
     document.getElementById("theme-dark").onclick = () => setTheme('dark-blue');
+    document.getElementById("theme-green").onclick = () => setTheme('dark-green');
     document.getElementById("theme-light").onclick = () => setTheme('light');
     document.getElementById("undoBtn").onclick = undo;
     document.getElementById("redoBtn").onclick = redo;

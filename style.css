@@ -50,6 +50,24 @@
     --scrollbar-thumb-hover: #484f58;
 }
 
+[data-theme="dark-green"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #2c394b;
+    --bg-tertiary: #334155;
+    --bg-card: #0f172a;
+    --bg-card-hover: #1e293b;
+    --bg-card-active: #1e293b;
+    --text-primary: #f0fdf4;
+    --text-secondary: #86efac;
+    --text-muted: #4ade80;
+    --border-color: #233561;
+    --accent: #22c55e;
+    --accent-hover: #16a34a;
+    --scrollbar-bg: #0f172a;
+    --scrollbar-thumb: #166534;
+    --scrollbar-thumb-hover: #22c55e;
+}
+
 * {
     margin: 0;
     padding: 0;
