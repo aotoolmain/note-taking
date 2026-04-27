@@ -51,7 +51,10 @@
 </header>
 
 <div class="flex flex-1 overflow-hidden">
-    <aside class="w-84 flex flex-col" style="background-color: var(--bg-secondary); border-right: 1px solid var(--border-color);">
+    <button id="sidebarToggle" class="sidebar-toggle-btn flex items-center justify-center" style="background-color: var(--bg-secondary); border-right: 1px solid var(--border-color); color: var(--text-muted);" title="收起侧边栏">
+        <i class="fa fa-chevron-left"></i>
+    </button>
+    <aside id="sidebar" class="w-84 flex flex-col sidebar" style="background-color: var(--bg-secondary); border-right: 1px solid var(--border-color);">
         <div class="category-section rounded-lg mx-3 mt-3 p-3" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color);">
             <div class="relative mb-3">
                 <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color: var(--text-muted);"></i>
@@ -90,29 +93,44 @@
             <div class="flex items-center justify-between px-2 py-2" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
                 <div class="editor-toolbar" id="toolbar">
 
-                    <button class="tool-btn" data-action="bold" title="粗体 Ctrl+B"><i class="fa fa-bold"></i><span>粗体</span><kbd>Ctrl+B</kbd></button>
-                    <button class="tool-btn" data-action="italic" title="斜体 Ctrl+I"><i class="fa fa-italic"></i><span>斜体</span><kbd>Ctrl+I</kbd></button>
-                    <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+Shift+S"><i class="fa fa-strikethrough"></i><span>删除线</span><kbd>Ctrl+Shift+S</kbd></button>
+                    <button class="tool-btn" data-action="bold" title="粗体 Ctrl+B"><i class="fa fa-bold"></i><span class="tool-label">粗体</span><kbd>Ctrl+B</kbd></button>
+                    <button class="tool-btn" data-action="italic" title="斜体 Ctrl+I"><i class="fa fa-italic"></i><span class="tool-label">斜体</span><kbd>Ctrl+I</kbd></button>
+                    <button class="tool-btn" data-action="strikethrough" title="删除线 Ctrl+Shift+S"><i class="fa fa-strikethrough"></i><span class="tool-label">删除线</span><kbd>Ctrl+Shift+S</kbd></button>  
                     <div class="tool-divider"></div>
-                    <button class="tool-btn" data-action="h1" title="一级标题 Ctrl+1"><i class="fa fa-header"></i><span>H1</span><kbd>Ctrl+1</kbd></button>
-                    <button class="tool-btn" data-action="h2" title="二级标题 Ctrl+2"><i class="fa fa-header"></i><span>H2</span><kbd>Ctrl+2</kbd></button>
-                    <button class="tool-btn" data-action="h3" title="三级标题 Ctrl+3"><i class="fa fa-header"></i><span>H3</span><kbd>Ctrl+3</kbd></button>
+                    <div class="tool-group">
+                        <button class="tool-btn tool-group-toggle" title="标题"><i class="fa fa-header"></i><span class="tool-label">标题</span><i class="fa fa-chevron-down ml-1 text-xs"></i></button>
+                        <div class="tool-group-menu">
+                            <button class="tool-btn" data-action="h1" title="一级标题 Ctrl+1"><i class="fa fa-header"></i><span class="tool-label">H1</span><kbd>Ctrl+1</kbd></button>
+                            <button class="tool-btn" data-action="h2" title="二级标题 Ctrl+2"><i class="fa fa-header"></i><span class="tool-label">H2</span><kbd>Ctrl+2</kbd></button>
+                            <button class="tool-btn" data-action="h3" title="三级标题 Ctrl+3"><i class="fa fa-header"></i><span class="tool-label">H3</span><kbd>Ctrl+3</kbd></button>
+                        </div>
+                    </div>
                     <div class="tool-divider"></div>
-                    <button class="tool-btn" data-action="ulist" title="无序列表 Ctrl+L"><i class="fa fa-list-ul"></i><span>无序</span><kbd>Ctrl+L</kbd></button>
-                    <button class="tool-btn" data-action="olist" title="有序列表 Ctrl+O"><i class="fa fa-list-ol"></i><span>有序</span><kbd>Ctrl+O</kbd></button>
-                    <button class="tool-btn" data-action="task" title="待办事项 Ctrl+T"><i class="fa fa-square-o"></i><span>待办</span><kbd>Ctrl+T</kbd></button>
+                    <div class="tool-group">
+                        <button class="tool-btn tool-group-toggle" title="列表"><i class="fa fa-list-ul"></i><span class="tool-label">列表</span><i class="fa fa-chevron-down ml-1 text-xs"></i></button>
+                        <div class="tool-group-menu">
+                            <button class="tool-btn" data-action="ulist" title="无序列表 Ctrl+L"><i class="fa fa-list-ul"></i><span class="tool-label">无序</span><kbd>Ctrl+L</kbd></button>
+                            <button class="tool-btn" data-action="olist" title="有序列表 Ctrl+O"><i class="fa fa-list-ol"></i><span class="tool-label">有序</span><kbd>Ctrl+O</kbd></button>
+                            <button class="tool-btn" data-action="task" title="待办事项 Ctrl+T"><i class="fa fa-square-o"></i><span class="tool-label">待办</span><kbd>Ctrl+T</kbd></button>
+                        </div>
+                    </div>
                     <div class="tool-divider"></div>
-                    <button class="tool-btn" data-action="link" title="链接 Ctrl+K"><i class="fa fa-link"></i><span>链接</span><kbd>Ctrl+K</kbd></button>
-                    <button class="tool-btn" data-action="image" title="图片 Ctrl+G"><i class="fa fa-image"></i><span>图片</span><kbd>Ctrl+G</kbd></button>
+                    <button class="tool-btn" data-action="link" title="链接 Ctrl+K"><i class="fa fa-link"></i><span class="tool-label">链接</span><kbd>Ctrl+K</kbd></button>
+                    <button class="tool-btn" data-action="image" title="图片 Ctrl+G"><i class="fa fa-image"></i><span class="tool-label">图片</span><kbd>Ctrl+G</kbd></button>
                     <div class="tool-divider"></div>
-                    <button class="tool-btn" data-action="code" title="行内代码 Ctrl+`"><i class="fa fa-code"></i><span>代码</span><kbd>Ctrl+`</kbd></button>
-                    <button class="tool-btn" data-action="codeblock" title="代码块 Ctrl+Shift+C"><i class="fa fa-code-fork"></i><span>代码块</span><kbd>Ctrl+Shift+C</kbd></button>
-                    <button class="tool-btn" data-action="quote" title="引用 Ctrl+Q"><i class="fa fa-quote-right"></i><span>引用</span><kbd>Ctrl+Q</kbd></button>
-                    <button class="tool-btn" data-action="table" title="表格 Ctrl+E"><i class="fa fa-table"></i><span>表格</span><kbd>Ctrl+E</kbd></button>
-                    <button class="tool-btn" data-action="hr" title="分割线 Ctrl+-"><i class="fa fa-minus"></i><span>分割线</span><kbd>Ctrl+-</kbd></button>
+                    <div class="tool-group">
+                        <button class="tool-btn tool-group-toggle" title="代码"><i class="fa fa-code"></i><span class="tool-label">代码</span><i class="fa fa-chevron-down ml-1 text-xs"></i></button>
+                        <div class="tool-group-menu">
+                            <button class="tool-btn" data-action="code" title="行内代码 Ctrl+`"><i class="fa fa-code"></i><span class="tool-label">行内</span><kbd>Ctrl+`</kbd></button>
+                            <button class="tool-btn" data-action="codeblock" title="代码块 Ctrl+Shift+C"><i class="fa fa-code-fork"></i><span class="tool-label">代码块</span><kbd>Ctrl+Shift+C</kbd></button>
+                        </div>
+                    </div>
+                    <button class="tool-btn" data-action="quote" title="引用 Ctrl+Q"><i class="fa fa-quote-right"></i><span class="tool-label">引用</span><kbd>Ctrl+Q</kbd></button>
+                    <button class="tool-btn" data-action="table" title="表格 Ctrl+E"><i class="fa fa-table"></i><span class="tool-label">表格</span><kbd>Ctrl+E</kbd></button>
+                    <button class="tool-btn" data-action="hr" title="分割线 Ctrl+-"><i class="fa fa-minus"></i><span class="tool-label">分割线</span><kbd>Ctrl+-</kbd></button>
                     <div class="tool-divider"></div>
-                    <button class="tool-btn" id="undoBtn" title="撤销 Ctrl+Z"><i class="fa fa-undo"></i><span>撤销</span><kbd>Ctrl+Z</kbd></button>
-                    <button class="tool-btn" id="redoBtn" title="重做 Ctrl+Shift+Z"><i class="fa fa-repeat"></i><span>重做</span><kbd>Ctrl+Shift+Z</kbd></button>
+                    <button class="tool-btn" id="undoBtn" title="撤销 Ctrl+Z"><i class="fa fa-undo"></i><span class="tool-label">撤销</span><kbd>Ctrl+Z</kbd></button>
+                    <button class="tool-btn" id="redoBtn" title="重做 Ctrl+Shift+Z"><i class="fa fa-repeat"></i><span class="tool-label">重做</span><kbd>Ctrl+Shift+Z</kbd></button>
              
                 </div>
                 <div class="flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">

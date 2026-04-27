@@ -294,12 +294,55 @@ function bindEditorEvents(editor) {
     });
 }
 
+function bindSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    toggleBtn?.addEventListener('click', () => {
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        const icon = toggleBtn.querySelector('i');
+        
+        if (isCollapsed) {
+            sidebar.classList.remove('collapsed');
+            icon.className = 'fa fa-chevron-left';
+            toggleBtn.title = '收起侧边栏';
+        } else {
+            sidebar.classList.add('collapsed');
+            icon.className = 'fa fa-chevron-right';
+            toggleBtn.title = '展开侧边栏';
+        }
+    });
+}
+
+function bindToolGroupToggles() {
+    const toggles = document.querySelectorAll('.tool-group-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = toggle.classList.contains('active');
+            
+            document.querySelectorAll('.tool-group-toggle').forEach(t => t.classList.remove('active'));
+            
+            if (!isActive) {
+                toggle.classList.add('active');
+            }
+        });
+    });
+    
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.tool-group-toggle').forEach(t => t.classList.remove('active'));
+    });
+}
+
 async function init() {
     setTheme(currentTheme);
     await loadCate();
     await loadNotes();
     bindEvents();
     setLayout(layoutMode);
+    bindSidebarToggle();
+    bindToolGroupToggles();
     
     const editor = document.getElementById('editor');
     bindEditorEvents(editor);

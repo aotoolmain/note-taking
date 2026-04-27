@@ -404,14 +404,45 @@
 .tool-btn:active {
     transform: scale(0.96);
 }
-.tool-btn kbd {
+.tool-btn kbd{
     display: none;
 }
 .tool-divider {
     width: 1px;
-    height: 24px;
+    height: auto;
     background: var(--border-color);
     margin: 0 4px;
+}
+
+.tool-group {
+    position: relative;
+    display: inline-flex;
+}
+
+.tool-group-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    padding: 4px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tool-group:hover .tool-group-menu,
+.tool-group-toggle.active + .tool-group-menu {
+    display: flex;
+}
+
+.tool-group-menu .tool-btn {
+    white-space: nowrap;
+    border-radius: 4px;
 }
 
 #categoryList .drop-target {
@@ -432,4 +463,30 @@
 .note-group-container.collapsed {
     max-height: 0;
     opacity: 0;
+}
+
+.sidebar-toggle-btn {
+    width: 28px;
+    padding: 8px 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    color: var(--text-secondary);
+    background-color: var(--bg-card-hover);
+}
+
+.sidebar {
+    transition: width 0.3s ease, opacity 0.2s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
 }
