@@ -470,7 +470,8 @@
     padding: 8px 4px;
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
 }
 
 .sidebar-toggle-btn:hover {
@@ -478,8 +479,14 @@
     background-color: var(--bg-card-hover);
 }
 
+.sidebar-toggle-btn i {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .sidebar {
-    transition: width 0.3s ease, opacity 0.2s ease;
+    width: 21rem;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
 
@@ -489,4 +496,5 @@
     padding: 0;
     margin: 0;
     border-width: 0;
+    min-width: 0;
 }
