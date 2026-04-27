@@ -1,5 +1,5 @@
 {
-  "name": "sqlite-notes-app",
+  "name": "note-taking",
   "version": "1.0.0",
   "description": "Lightweight notes application",
   "main": "server.js",
