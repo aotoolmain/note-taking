@@ -5,6 +5,10 @@ const defaultShortcuts = {
     'h1': { key: '1', ctrl: true, shift: false, alt: false },
     'h2': { key: '2', ctrl: true, shift: false, alt: false },
     'h3': { key: '3', ctrl: true, shift: false, alt: false },
+    'h4': { key: '4', ctrl: true, shift: false, alt: false },
+    'h5': { key: '5', ctrl: true, shift: false, alt: false },
+    'h6': { key: '6', ctrl: true, shift: false, alt: false },
+    'h7': { key: '7', ctrl: true, shift: false, alt: false },
     'ulist': { key: 'l', ctrl: true, shift: false, alt: false },
     'olist': { key: 'o', ctrl: true, shift: false, alt: false },
     'task': { key: 't', ctrl: true, shift: false, alt: false },
@@ -17,7 +21,7 @@ const defaultShortcuts = {
     'codeblock': { key: 'c', ctrl: true, shift: true, alt: false },
     'save': { key: 's', ctrl: true, shift: false, alt: false },
     'undo': { key: 'z', ctrl: true, shift: false, alt: false },
-    'redo': { key: 'z', ctrl: true, shift: true, alt: false }
+    'redo': { key: 'z', ctrl: true, shift: false, alt: true }
 };
 
 const shortcutLabels = {
@@ -27,6 +31,10 @@ const shortcutLabels = {
     'h1': '一级标题',
     'h2': '二级标题',
     'h3': '三级标题',
+    'h4': '四级标题',
+    'h5': '五级标题',
+    'h6': '六级标题',
+    'h7': '七级标题',
     'ulist': '无序列表',
     'olist': '有序列表',
     'task': '待办事项',
@@ -44,17 +52,33 @@ const shortcutLabels = {
 
 let currentShortcuts = {};
 
+const SHORTCUTS_VERSION = '1.1';
+
 function loadShortcuts() {
+    const savedVersion = localStorage.getItem('shortcutsVersion');
     const saved = localStorage.getItem('customShortcuts');
-    if (saved) {
+    
+    if (saved && savedVersion === SHORTCUTS_VERSION) {
         try {
-            currentShortcuts = JSON.parse(saved);
+            const savedShortcuts = JSON.parse(saved);
+            currentShortcuts = { ...defaultShortcuts, ...savedShortcuts };
         } catch (e) {
             currentShortcuts = { ...defaultShortcuts };
         }
     } else {
         currentShortcuts = { ...defaultShortcuts };
+        localStorage.setItem('customShortcuts', JSON.stringify(currentShortcuts));
+        localStorage.setItem('shortcutsVersion', SHORTCUTS_VERSION);
     }
+    validateShortcuts();
+}
+
+function validateShortcuts() {
+    Object.keys(defaultShortcuts).forEach(action => {
+        if (!currentShortcuts[action]) {
+            currentShortcuts[action] = { ...defaultShortcuts[action] };
+        }
+    });
 }
 
 function saveShortcuts() {

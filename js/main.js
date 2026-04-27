@@ -198,10 +198,23 @@ function handleEditorKeydown(editor, e) {
         handleTabKey(editor, e);
         return;
     }
-
+    
     if (layoutMode === 2) return;
 
     if (e.ctrlKey || e.metaKey) {
+        const numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        const redoKey = (e.altKey && e.key.toLowerCase() === 'z');
+        if (redoKey) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof redo === 'function') redo();
+            return;
+        }
+        
+        if (numberKeys.includes(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         handleCtrlKey(editor, e);
     }
 }
@@ -246,10 +259,24 @@ function handleTabKey(editor, e) {
 function handleCtrlKey(editor, e) {
     if (!window.shortcutManager) return;
 
+    const modifierKeys = ['Control', 'Shift', 'Alt', 'Meta'];
+    if (modifierKeys.includes(e.key)) return;
+
     const action = window.shortcutManager.matchShortcut(e);
+    
+    console.log('Shortcut debug:', {
+        key: e.key,
+        ctrlKey: e.ctrlKey,
+        shiftKey: e.shiftKey,
+        altKey: e.altKey,
+        action: action,
+        currentShortcuts: window.shortcutManager ? JSON.stringify(window.shortcutManager.getCurrentShortcuts?.() || window.shortcutManager.matchShortcut.toString()) : 'not loaded'
+    });
+
     if (!action) return;
 
     e.preventDefault();
+    e.stopPropagation();
 
     switch (action) {
         case 'save':
@@ -344,5 +371,7 @@ async function init() {
     bindEditorEvents(editor);
     updatePreview();
 }
+
+
 
 window.addEventListener('DOMContentLoaded', init);

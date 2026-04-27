@@ -274,6 +274,10 @@ function handleToolAction(action) {
         case 'h1': addPrefixToLines('# '); break;
         case 'h2': addPrefixToLines('## '); break;
         case 'h3': addPrefixToLines('### '); break;
+        case 'h4': addPrefixToLines('#### '); break;
+        case 'h5': addPrefixToLines('##### '); break;
+        case 'h6': addPrefixToLines('###### '); break;
+        case 'h7': addPrefixToLines('####### '); break;
         case 'bold': wrapSelection('**', '**', '粗体文本'); break;
         case 'italic': wrapSelection('*', '*', '斜体文本'); break;
         case 'strikethrough': wrapSelection('~~', '~~', '删除线文本'); break;
@@ -308,3 +312,6 @@ function redo() {
         updatePreview();
     }
 }
+
+window.undo = undo;
+window.redo = redo;
