@@ -234,7 +234,7 @@ async function insertImage() {
 }
 
 const codeLanguages = [
-    'javascript', 'typescript', 'python', 'java', 'go', 'rust', 'c', 'cpp', 'csharp',
+    'cpp', 'java', 'python', 'javascript', 'typescript', 'go', 'rust', 'c', 'csharp',
     'bash', 'shell', 'powershell',
     'html', 'css', 'scss', 'sass', 'less',
     'sql', 'mysql', 'postgresql', 'sqlite',
@@ -245,7 +245,7 @@ const codeLanguages = [
 ];
 
 async function insertCodeBlock() {
-    const lang = await showSelectPrompt('插入代码块', '请选择代码语言', codeLanguages, 'javascript', 'fa-code');
+    const lang = await showSelectPrompt('插入代码块', '请选择代码语言', codeLanguages, 'cpp', 'fa-code');
     if (!lang) return;
 
     let codePlaceholder = '// 你的代码';
