@@ -248,56 +248,28 @@ function handleTabKey(editor, e) {
 }
 
 function handleCtrlKey(editor, e) {
-    const key = e.key.toLowerCase();
+    if (!window.shortcutManager) return;
     
-    if (key === 'z' && !e.shiftKey) {
-        e.preventDefault();
-        if (typeof undo === 'function') undo();
-        return;
-    }
+    const action = window.shortcutManager.matchShortcut(e);
+    if (!action) return;
     
-    if (key === 'z' && e.shiftKey) {
-        e.preventDefault();
-        if (typeof redo === 'function') redo();
-        return;
-    }
+    e.preventDefault();
     
-    if (key === 's') {
-        e.preventDefault();
-        if (e.shiftKey) {
-            if (typeof handleToolAction === 'function') handleToolAction('strikethrough');
-        } else {
+    switch (action) {
+        case 'save':
             if (typeof autoSave === 'function') autoSave();
-        }
-        return;
-    }
-    
-    const actionMap = {
-        'b': 'bold',
-        'i': 'italic',
-        '1': 'h1',
-        '2': 'h2',
-        '3': 'h3',
-        'l': 'ulist',
-        'o': 'olist',
-        't': 'task',
-        'k': 'link',
-        'g': 'image',
-        'q': 'quote',
-        'e': 'table',
-        '-': 'hr',
-        '`': 'code'
-    };
-    
-    if (actionMap[key]) {
-        e.preventDefault();
-        if (typeof handleToolAction === 'function') handleToolAction(actionMap[key]);
-        return;
-    }
-    
-    if (e.shiftKey && key === 'c') {
-        e.preventDefault();
-        if (typeof insertCodeBlock === 'function') insertCodeBlock();
+            break;
+        case 'undo':
+            if (typeof undo === 'function') undo();
+            break;
+        case 'redo':
+            if (typeof redo === 'function') redo();
+            break;
+        case 'codeblock':
+            if (typeof insertCodeBlock === 'function') insertCodeBlock();
+            break;
+        default:
+            if (typeof handleToolAction === 'function') handleToolAction(action);
     }
 }
 

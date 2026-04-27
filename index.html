@@ -40,6 +40,9 @@
             </button>
         </div>
         <div class="ml-2 flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
+            <button id="settingsBtn" class="p-2 rounded-md transition" style="display: none; color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="设置">
+                <i class="fa fa-cog"></i>
+            </button>
             <button id="shortcutBtn" class="p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="快捷键帮助">
                 <i class="fa fa-keyboard-o"></i>
             </button>
@@ -201,7 +204,7 @@
         
         <div class="space-y-6">
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">编辑操作</h3>
+                <h3 class="bb-1 text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">编辑操作</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">撤销</span>
@@ -231,7 +234,7 @@
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">文本格式化</h3>
+                <h3 class="bb-1 text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">文本格式化</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">粗体</span>
@@ -261,7 +264,7 @@
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">标题</h3>
+                <h3 class="bb-1 text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">标题</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">一级标题</span>
@@ -279,7 +282,7 @@
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">列表</h3>
+                <h3 class="bb-1 text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">列表</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">无序列表</span>
@@ -297,7 +300,7 @@
             </div>
             
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">插入内容</h3>
+                <h3 class="bb-1 text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">插入内容</h3>
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <span style="color: var(--text-secondary);">链接</span>
@@ -327,7 +330,31 @@
 
 <div id="shortcutOverlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
 
+<div id="settingsDrawer" class="fixed inset-y-0 right-0 w-96 shadow-2xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto" style="background-color: var(--bg-secondary);">
+    <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold" style="color: var(--text-primary);">设置</h2>
+            <button id="closeSettingsBtn" class="transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color: var(--text-muted);">快捷键设置</h3>
+                <div id="shortcutsSettings" class="space-y-3">
+                </div>
+                <button id="resetShortcutsBtn" class="w-full mt-4 px-4 py-2 rounded-lg text-sm" style="background-color: var(--bg-tertiary); color: var(--text-secondary);">
+                    <i class="fa fa-refresh"></i> 重置为默认值
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="settingsOverlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
+
 <script src="js/ui-utils.js"></script>
+    <script src="js/settings.js"></script>
     <script src="js/editor.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/notes-api.js"></script>

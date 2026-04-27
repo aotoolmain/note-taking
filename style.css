@@ -280,6 +280,11 @@
     background: rgba(0, 0, 0, 0.12);
     color: #21262d;
 }
+
+.bb-1 {
+    border-bottom: 1px solid var(--border-color);
+}
+
 .markdown-body .code-block-content {
     max-height: none;
     overflow: visible;
