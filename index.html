@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="h-screen flex flex-col" style="background-color: var(--bg-primary); color: var(--text-primary);">
-<header class="px-4 py-3 flex justify-between items-center" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+<header class="px-4 py-1 flex justify-between items-center" style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
     <div class="flex items-center gap-2">
         <i class="fa fa-book text-blue-400 text-xl"></i>
         <h1 class="font-bold" style="color: var(--text-primary);">我的笔记</h1>
@@ -36,7 +36,7 @@
                 <i class="fa fa-moon-o"></i>
             </button>
             <button id="theme-light" class="theme-btn p-2 rounded-md transition" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text-primary)';this.style.backgroundColor='var(--bg-card-hover)'" onmouseout="this.style.color='var(--text-muted)';this.style.backgroundColor='transparent'" title="亮色主题">
-                <i class="fa fa-sun-o"></i>
+                <i class="fa fa-certificate"></i>
             </button>
         </div>
         <div class="ml-2 flex items-center gap-1 rounded-lg p-1" style="background-color: var(--bg-tertiary);">
@@ -135,7 +135,7 @@
                     <div class="pane-header px-4 py-2 flex items-center gap-2 text-sm" style="background-color: var(--bg-secondary); color: var(--text-muted);">
                         <i class="fa fa-eye"></i> 实时预览 · 渲染效果
                     </div>
-                    <div id="preview" class="flex-1 overflow-auto p-3 markdown-body"></div>
+                    <div id="preview" class="flex-1 overflow-auto p-3  py-0 markdown-body"></div>
                 </div>
             </div>
         </div>

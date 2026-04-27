@@ -33,6 +33,7 @@ marked.use({
         code: function(text, lang, escaped) {
             const language = lang && lang.trim().toLowerCase();
             let processedText = text || '';
+            let blockId = 'code-block-' + Math.random().toString(36).substr(2, 9);
             
             if (processedText && language && window.codeFormatter) {
                 try {
@@ -53,21 +54,58 @@ marked.use({
                 }
             }
             
+            const lineCount = processedText.split('\n').length;
+            const needsCollapse = lineCount > 20;
+            const isCollapsed = needsCollapse;
+            
             return `
                 <div class="code-block-container">
                     <div class="code-block-header">
                         <span class="code-block-lang">${language || 'code'}</span>
-                        <button class="code-block-copy" data-copy-btn>
-                            <i class="fa fa-copy"></i>
-                            <span>复制</span>
-                        </button>
+                        <div style="display: flex; align-items: center;">
+                            ${needsCollapse ? `
+                                <button class="code-block-toggle" data-toggle-btn="${blockId}">
+                                    <i class="fa ${isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'}"></i>
+                                    <span>${isCollapsed ? '展开' : '折叠'}</span>
+                                </button>
+                            ` : ''}
+                            <button class="code-block-copy" data-copy-btn>
+                                <i class="fa fa-copy"></i>
+                                <span>复制</span>
+                            </button>
+                        </div>
                     </div>
-                    <pre><code class="${language ? 'language-' + language : ''}">${highlighted}</code></pre>
+                    <div class="code-block-content ${isCollapsed ? 'collapsed' : ''}" id="${blockId}">
+                        <pre><code class="${language ? 'language-' + language : ''}">${highlighted}</code></pre>
+                    </div>
                 </div>
             `;
         }
     }
 });
+
+function handleCodeBlockToggle(e) {
+    const btn = e.target.closest('[data-toggle-btn]');
+    if (!btn) return;
+    
+    const blockId = btn.getAttribute('data-toggle-btn');
+    const content = document.getElementById(blockId);
+    if (!content) return;
+    
+    const isCollapsed = content.classList.contains('collapsed');
+    const icon = btn.querySelector('i');
+    const text = btn.querySelector('span');
+    
+    if (isCollapsed) {
+        content.classList.remove('collapsed');
+        icon.className = 'fa fa-chevron-up';
+        text.textContent = '折叠';
+    } else {
+        content.classList.add('collapsed');
+        icon.className = 'fa fa-chevron-down';
+        text.textContent = '展开';
+    }
+}
 
 function handleCopyCode(e) {
     const btn = e.target.closest('[data-copy-btn]');
@@ -151,6 +189,7 @@ async function init() {
     await loadCate();
     await loadNotes();
     bindEvents();
+    setLayout(layoutMode);
     
     const editor = document.getElementById('editor');
     
@@ -175,6 +214,10 @@ async function init() {
             editor.value = value.substring(0, start) + '\t' + value.substring(end);
             editor.selectionStart = editor.selectionEnd = start + 1;
             updatePreview();
+            return;
+        }
+        
+        if (layoutMode === 2) {
             return;
         }
         

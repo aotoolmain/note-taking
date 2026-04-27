@@ -54,4 +54,5 @@ function bindEvents() {
     document.getElementById("addCategory").onclick = newCategory;
     
     document.addEventListener('click', handleCopyCode);
+    document.addEventListener('click', handleCodeBlockToggle);
 }

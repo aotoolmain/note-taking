@@ -28,6 +28,7 @@ function setLayout(mode) {
     const btnEditor = document.getElementById('layoutEditor');
     const btnBoth = document.getElementById('layoutBoth');
     const btnPreview = document.getElementById('layoutPreview');
+    const toolButtons = document.querySelectorAll('.tool-btn');
     
     btnEditor.style.backgroundColor = 'transparent';
     btnEditor.style.color = 'var(--text-muted)';
@@ -50,6 +51,11 @@ function setLayout(mode) {
         btnEditor.style.color = 'white';
         btnEditor.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
         btnEditor.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
+        toolButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        });
     } else if (mode === 1) {
         editorPanel.style.display = 'flex';
         previewPanel.classList.remove('hidden');
@@ -57,6 +63,11 @@ function setLayout(mode) {
         btnBoth.style.color = 'white';
         btnBoth.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
         btnBoth.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
+        toolButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        });
     } else {
         editorPanel.style.display = 'none';
         previewPanel.classList.remove('hidden');
@@ -64,6 +75,11 @@ function setLayout(mode) {
         btnPreview.style.color = 'white';
         btnPreview.onmouseover = function() { this.style.backgroundColor='var(--accent-hover)'; };
         btnPreview.onmouseout = function() { this.style.backgroundColor='var(--accent)'; };
+        toolButtons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        });
     }
     layoutMode = mode;
     updatePreview();

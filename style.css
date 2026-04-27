@@ -190,7 +190,7 @@
     background: #1e1e1e;
     border-radius: 8px;
     overflow: hidden;
-    margin: 1.5em 0;
+    margin: 1em 0;
     border: 1px solid #3c3c3c;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -253,6 +253,42 @@
 [data-theme="light"] .markdown-body .code-block-copy.copied {
     color: #238636;
     background: rgba(35, 134, 54, 0.15);
+}
+.markdown-body .code-block-toggle {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+}
+[data-theme="light"] .markdown-body .code-block-toggle {
+    background: rgba(0, 0, 0, 0.06);
+    color: #6e7681;
+}
+.markdown-body .code-block-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #e6edf3;
+}
+[data-theme="light"] .markdown-body .code-block-toggle:hover {
+    background: rgba(0, 0, 0, 0.12);
+    color: #21262d;
+}
+.markdown-body .code-block-content {
+    max-height: none;
+    overflow: visible;
+    transition: max-height 0.3s ease;
+}
+.markdown-body .code-block-content.collapsed {
+    max-height: 300px;
+    overflow: hidden;
+    margin-bottom: 16px;
 }
 .markdown-body pre {
     background: transparent;
