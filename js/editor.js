@@ -4,9 +4,9 @@ function updatePreview() {
         const textarea = document.getElementById('editor');
         const preview = document.getElementById('preview');
         if (!textarea || !preview) return;
-        
+
         const rawMarkdown = textarea.value;
-        
+
         if (window.marked && typeof window.marked.parse === 'function') {
             try {
                 let rawHtml = await window.marked.parse(rawMarkdown);
@@ -29,21 +29,21 @@ function setLayout(mode) {
     const btnBoth = document.getElementById('layoutBoth');
     const btnPreview = document.getElementById('layoutPreview');
     const toolButtons = document.querySelectorAll('.tool-btn');
-    
+
     btnEditor.style.backgroundColor = 'transparent';
     btnEditor.style.color = 'var(--text-muted)';
     btnBoth.style.backgroundColor = 'transparent';
     btnBoth.style.color = 'var(--text-muted)';
     btnPreview.style.backgroundColor = 'transparent';
     btnPreview.style.color = 'var(--text-muted)';
-    
+
     btnEditor.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
     btnEditor.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
     btnBoth.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
     btnBoth.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
     btnPreview.onmouseover = function() { this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--bg-card-hover)'; };
     btnPreview.onmouseout = function() { this.style.color='var(--text-muted)'; this.style.backgroundColor='transparent'; };
-    
+
     if (mode === 0) {
         editorPanel.style.display = 'flex';
         previewPanel.classList.add('hidden');
@@ -91,17 +91,17 @@ function replaceSelectedText(replacement, selectReplacement = false) {
     const end = textarea.selectionEnd;
     const selected = textarea.value.substring(start, end);
     let newText;
-    
+
     if (typeof replacement === 'function') {
         newText = replacement(selected);
     } else {
         newText = replacement;
     }
-    
+
     const before = textarea.value.substring(0, start);
     const after = textarea.value.substring(end);
     textarea.value = before + newText + after;
-    
+
     if (selectReplacement && typeof newText === 'string') {
         textarea.selectionStart = start;
         textarea.selectionEnd = start + newText.length;
@@ -120,12 +120,10 @@ function wrapSelection(prefix, suffix, defaultMiddle = 'text') {
     const end = textarea.selectionEnd;
     const selected = textarea.value.substring(start, end);
     let content = selected;
-    if (content === '') {
-        content = defaultMiddle;
-    }
+    if (content === '') content = defaultMiddle;
     const wrapped = prefix + content + suffix;
     replaceSelectedText(wrapped, true);
-    
+
     if (selected === '' && wrapped.includes(defaultMiddle)) {
         const newStart = start + prefix.length;
         const newEnd = newStart + defaultMiddle.length;
@@ -142,7 +140,7 @@ function addPrefixToLines(prefix) {
     const textBefore = textarea.value.substring(0, start);
     const selectedText = textarea.value.substring(start, end);
     const textAfter = textarea.value.substring(end);
-    
+
     if (selectedText.length === 0) {
         const lineStart = textBefore.lastIndexOf('\n') + 1;
         const currentLine = textarea.value.substring(lineStart, end);
@@ -172,12 +170,12 @@ function addOrderedList() {
     const textBefore = textarea.value.substring(0, start);
     const selectedText = textarea.value.substring(start, end);
     const textAfter = textarea.value.substring(end);
-    
+
     if (selectedText.length === 0) {
         addPrefixToLines('1. ');
         return;
     }
-    
+
     const lines = selectedText.split(/\n/);
     const newLines = lines.map((line, idx) => `${idx + 1}. ${line}`);
     const newSelected = newLines.join('\n');
@@ -201,22 +199,22 @@ async function insertImage() {
     input.type = 'file';
     input.accept = 'image/*';
     input.style.display = 'none';
-    
+
     input.onchange = async function(e) {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         const alt = await showPrompt('插入图片', '请输入图片描述', '图片描述', 'fa-image');
-        
+
         try {
             const formData = new FormData();
             formData.append('image', file);
-            
+
             const res = await fetch('/api/upload/image', {
                 method: 'POST',
                 body: formData
             });
-            
+
             const result = await res.json();
             if (result.success) {
                 const imageMarkdown = `![${alt || 'image'}](${result.url})`;
@@ -229,7 +227,7 @@ async function insertImage() {
             await showAlert('图片上传失败，请重试');
         }
     };
-    
+
     document.body.appendChild(input);
     input.click();
     document.body.removeChild(input);
@@ -249,27 +247,20 @@ const codeLanguages = [
 async function insertCodeBlock() {
     const lang = await showSelectPrompt('插入代码块', '请选择代码语言', codeLanguages, 'javascript', 'fa-code');
     if (!lang) return;
+
     let codePlaceholder = '// 你的代码';
-    if (lang === 'python') {
-        codePlaceholder = '# 你的代码';
-    } else if (lang === 'bash' || lang === 'shell') {
-        codePlaceholder = '# 你的命令';
-    } else if (lang === 'html') {
-        codePlaceholder = '<!-- 你的 HTML -->';
-    } else if (lang === 'css' || lang === 'scss' || lang === 'sass' || lang === 'less') {
-        codePlaceholder = '/* 你的 CSS */';
-    } else if (lang === 'sql' || lang === 'mysql' || lang === 'postgresql' || lang === 'sqlite') {
-        codePlaceholder = '-- 你的 SQL';
-    } else if (lang === 'yaml') {
-        codePlaceholder = '# 你的配置';
-    } else if (lang === 'dockerfile') {
-        codePlaceholder = '# 你的 Dockerfile';
-    } else if (lang === 'makefile') {
-        codePlaceholder = '# 你的 Makefile';
-    }
+    if (lang === 'python') codePlaceholder = '# 你的代码';
+    else if (lang === 'bash' || lang === 'shell') codePlaceholder = '# 你的命令';
+    else if (lang === 'html') codePlaceholder = '<!-- 你的 HTML -->';
+    else if (lang === 'css' || lang === 'scss' || lang === 'sass' || lang === 'less') codePlaceholder = '/* 你的 CSS */';
+    else if (lang === 'sql' || lang === 'mysql' || lang === 'postgresql' || lang === 'sqlite') codePlaceholder = '-- 你的 SQL';
+    else if (lang === 'yaml') codePlaceholder = '# 你的配置';
+    else if (lang === 'dockerfile') codePlaceholder = '# 你的 Dockerfile';
+    else if (lang === 'makefile') codePlaceholder = '# 你的 Makefile';
+
     let block = '```' + (lang || '') + '\n' + codePlaceholder + '\n```';
     replaceSelectedText(block, true);
-    
+
     const textarea = document.getElementById('editor');
     const start = textarea.selectionStart - (codePlaceholder.length + 2);
     const end = start + codePlaceholder.length;

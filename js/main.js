@@ -1,9 +1,9 @@
 let currentId = null;
-let currentCateId = "all";
-let search = "";
+let currentCateId = 'all';
+let search = '';
 let layoutMode = 2;
 let renderTimeout;
-let currentTheme = localStorage.getItem("theme") || "dark-blue";
+let currentTheme = localStorage.getItem('theme') || 'dark-blue';
 let historyStack = [];
 let historyIndex = -1;
 
@@ -31,8 +31,8 @@ marked.use({
         code: function(text, lang, escaped) {
             const language = lang && lang.trim().toLowerCase();
             let processedText = text || '';
-            let blockId = 'code-block-' + Math.random().toString(36).substr(2, 9);
-            
+            const blockId = 'code-block-' + Math.random().toString(36).substr(2, 9);
+
             if (processedText && language && window.codeFormatter) {
                 try {
                     processedText = window.codeFormatter.format(processedText, language);
@@ -40,9 +40,9 @@ marked.use({
                     console.warn('Format error for ' + language + ': ', e);
                 }
             }
-            
+
             let highlighted = escapeHtml(processedText);
-            
+
             if (processedText && hljs) {
                 try {
                     const escapedText = escapeHtml(processedText);
@@ -51,11 +51,11 @@ marked.use({
                     console.warn('Highlight error:', e);
                 }
             }
-            
+
             const lineCount = processedText.split('\n').length;
             const needsCollapse = lineCount > 20;
             const isCollapsed = needsCollapse;
-            
+
             return `
                 <div class="code-block-container">
                     <div class="code-block-header">
@@ -85,15 +85,15 @@ marked.use({
 function handleCodeBlockToggle(e) {
     const btn = e.target.closest('[data-toggle-btn]');
     if (!btn) return;
-    
+
     const blockId = btn.getAttribute('data-toggle-btn');
     const content = document.getElementById(blockId);
     if (!content) return;
-    
+
     const isCollapsed = content.classList.contains('collapsed');
     const icon = btn.querySelector('i');
     const text = btn.querySelector('span');
-    
+
     if (isCollapsed) {
         content.classList.remove('collapsed');
         icon.className = 'fa fa-chevron-up';
@@ -108,34 +108,34 @@ function handleCodeBlockToggle(e) {
 function handleCopyCode(e) {
     const btn = e.target.closest('[data-copy-btn]');
     if (!btn) return;
-    
+
     try {
         const container = btn.closest('.code-block-container');
         if (!container) {
             console.error('找不到 code-block-container');
             return;
         }
-        
+
         const codeElement = container.querySelector('code');
         if (!codeElement) {
             console.error('找不到 code 元素');
             return;
         }
-        
+
         const code = codeElement.textContent;
         if (!code) {
             console.error('代码内容为空');
             return;
         }
-        
+
         navigator.clipboard.writeText(code).then(() => {
             const icon = btn.querySelector('i');
             const text = btn.querySelector('span');
-            
+
             if (icon) icon.className = 'fa fa-check';
             if (text) text.textContent = '已复制';
             btn.classList.add('copied');
-            
+
             setTimeout(() => {
                 if (icon) icon.className = 'fa fa-copy';
                 if (text) text.textContent = '复制';
@@ -157,16 +157,16 @@ function fallbackCopy(text, btn) {
     textarea.style.left = '-9999px';
     document.body.appendChild(textarea);
     textarea.select();
-    
+
     try {
         document.execCommand('copy');
         const icon = btn.querySelector('i');
         const text = btn.querySelector('span');
-        
+
         if (icon) icon.className = 'fa fa-check';
         if (text) text.textContent = '已复制';
         btn.classList.add('copied');
-        
+
         setTimeout(() => {
             if (icon) icon.className = 'fa fa-copy';
             if (text) text.textContent = '复制';
@@ -198,11 +198,9 @@ function handleEditorKeydown(editor, e) {
         handleTabKey(editor, e);
         return;
     }
-    
-    if (layoutMode === 2) {
-        return;
-    }
-    
+
+    if (layoutMode === 2) return;
+
     if (e.ctrlKey || e.metaKey) {
         handleCtrlKey(editor, e);
     }
@@ -212,7 +210,7 @@ function handleTabKey(editor, e) {
     const start = editor.selectionStart;
     const end = editor.selectionEnd;
     const value = editor.value;
-    
+
     if (e.shiftKey) {
         if (start === end) {
             if (start >= 2 && value.substring(start - 2, start) === '  ') {
@@ -222,9 +220,7 @@ function handleTabKey(editor, e) {
         } else {
             const selectedText = value.substring(start, end);
             const lines = selectedText.split('\n');
-            const unindentedLines = lines.map(line => 
-                line.startsWith('  ') ? line.substring(2) : line
-            );
+            const unindentedLines = lines.map(line => line.startsWith('  ') ? line.substring(2) : line);
             const unindentedText = unindentedLines.join('\n');
             editor.value = value.substring(0, start) + unindentedText + value.substring(end);
             editor.selectionStart = start;
@@ -249,12 +245,12 @@ function handleTabKey(editor, e) {
 
 function handleCtrlKey(editor, e) {
     if (!window.shortcutManager) return;
-    
+
     const action = window.shortcutManager.matchShortcut(e);
     if (!action) return;
-    
+
     e.preventDefault();
-    
+
     switch (action) {
         case 'save':
             if (typeof autoSave === 'function') autoSave();
@@ -277,13 +273,13 @@ function bindEditorEvents(editor) {
     editor.addEventListener('keydown', function(e) {
         handleEditorKeydown(editor, e);
     });
-    
+
     editor.addEventListener('input', function() {
         saveEditorHistory(editor);
         autoSave();
         updatePreview();
     });
-    
+
     const buttons = document.querySelectorAll('.tool-btn');
     buttons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -297,11 +293,11 @@ function bindEditorEvents(editor) {
 function bindSidebarToggle() {
     const toggleBtn = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
-    
+
     toggleBtn?.addEventListener('click', () => {
         const isCollapsed = sidebar.classList.contains('collapsed');
         const icon = toggleBtn.querySelector('i');
-        
+
         if (isCollapsed) {
             sidebar.classList.remove('collapsed');
             icon.className = 'fa fa-chevron-left';
@@ -316,20 +312,20 @@ function bindSidebarToggle() {
 
 function bindToolGroupToggles() {
     const toggles = document.querySelectorAll('.tool-group-toggle');
-    
+
     toggles.forEach(toggle => {
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
             const isActive = toggle.classList.contains('active');
-            
+
             document.querySelectorAll('.tool-group-toggle').forEach(t => t.classList.remove('active'));
-            
+
             if (!isActive) {
                 toggle.classList.add('active');
             }
         });
     });
-    
+
     document.addEventListener('click', () => {
         document.querySelectorAll('.tool-group-toggle').forEach(t => t.classList.remove('active'));
     });
@@ -343,10 +339,10 @@ async function init() {
     setLayout(layoutMode);
     bindSidebarToggle();
     bindToolGroupToggles();
-    
+
     const editor = document.getElementById('editor');
     bindEditorEvents(editor);
     updatePreview();
 }
 
-window.addEventListener("DOMContentLoaded", init);
+window.addEventListener('DOMContentLoaded', init);

@@ -1,20 +1,18 @@
 async function markdownToHtml(rawMarkdown) {
     if (window.marked && typeof window.marked.parse === 'function') {
         try {
-            let rawHtml = await window.marked.parse(rawMarkdown);
+            const rawHtml = await window.marked.parse(rawMarkdown);
             return DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
         } catch (e) {
             console.error('Markdown parse error:', e);
             return rawMarkdown.replace(/\n/g, '<br>');
         }
-    } else {
-        return rawMarkdown.replace(/\n/g, '<br>');
     }
+    return rawMarkdown.replace(/\n/g, '<br>');
 }
 
 function formatDateTime(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleString('zh-CN', {
+    return new Date(dateStr).toLocaleString('zh-CN', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -25,53 +23,58 @@ function formatDateTime(dateStr) {
 
 async function exportPdf() {
     if (!currentId) {
-        await showAlert("请先选择或创建一篇笔记");
+        await showAlert('请先选择或创建一篇笔记');
         return;
     }
+
     const res = await fetch(`/api/notes/${currentId}`);
     const note = await res.json();
-    const title = note.title || "无标题";
+    const title = note.title || '无标题';
     const cateName = note.cateName || '未分类';
     const time = formatDateTime(note.time);
     const rawMarkdown = document.getElementById('editor').value;
     const content = await markdownToHtml(rawMarkdown);
-    
+
     function convertLists(html) {
         let result = html;
         const ulRegex = /<ul>([\s\S]*?)<\/ul>/gi;
         const olRegex = /<ol>([\s\S]*?)<\/ol>/gi;
-        
+
         result = result.replace(ulRegex, (match, content) => {
             const liRegex = /<li>([\s\S]*?)<\/li>/gi;
-            let items = [];
+            const items = [];
             let liMatch;
             while ((liMatch = liRegex.exec(content)) !== null) {
                 items.push(liMatch[1]);
             }
-            let htmlItems = items.map(item => `<div style="display: flex; margin-bottom: 8px;"><span style="width: 20px; flex-shrink: 0;">•</span><span>${item}</span></div>`).join('');
+            const htmlItems = items.map(item =>
+                `<div style="display: flex; margin-bottom: 8px;"><span style="width: 20px; flex-shrink: 0;">•</span><span>${item}</span></div>`
+            ).join('');
             return `<div style="margin: 12px 0;">${htmlItems}</div>`;
         });
-        
+
         result = result.replace(olRegex, (match, content) => {
             const liRegex = /<li>([\s\S]*?)<\/li>/gi;
-            let items = [];
+            const items = [];
             let liMatch;
             while ((liMatch = liRegex.exec(content)) !== null) {
                 items.push(liMatch[1]);
             }
-            let htmlItems = items.map((item, index) => `<div style="display: flex; margin-bottom: 8px;"><span style="width: 32px; flex-shrink: 0;">${index + 1}.</span><span>${item}</span></div>`).join('');
+            const htmlItems = items.map((item, index) =>
+                `<div style="display: flex; margin-bottom: 8px;"><span style="width: 32px; flex-shrink: 0;">${index + 1}.</span><span>${item}</span></div>`
+            ).join('');
             return `<div style="margin: 12px 0;">${htmlItems}</div>`;
         });
-        
+
         return result;
     }
-    
+
     let processedContent = content;
     processedContent = processedContent.replace(/<\/h1>/g, '</h1><div style="height: 2px; background-color: #3b82f6; margin-top: -8px; margin-bottom: 16px;"></div>');
     processedContent = processedContent.replace(/<\/h2>/g, '</h2><div style="height: 1px; background-color: #ddd; margin-top: -6px; margin-bottom: 14px;"></div>');
     processedContent = convertLists(processedContent);
-    
-    const pdfContent = document.createElement("div");
+
+    const pdfContent = document.createElement('div');
     pdfContent.style.cssText = 'position: fixed; top: -1000px; left: -1000px; background: white;';
     pdfContent.innerHTML = `
         <style>
@@ -109,9 +112,9 @@ async function exportPdf() {
             <div class="pdf-content">${processedContent}</div>
         </div>
     `;
-    
+
     document.body.appendChild(pdfContent);
-    
+
     try {
         const canvas = await html2canvas(pdfContent.querySelector('.pdf-container'), {
             scale: 2,
@@ -119,7 +122,7 @@ async function exportPdf() {
             logging: false,
             backgroundColor: '#ffffff'
         });
-        
+
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
@@ -127,9 +130,9 @@ async function exportPdf() {
             unit: 'px',
             format: [canvas.width, canvas.height]
         });
-        
+
         pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        
+
         const fileName = `${title.replace(/[\\/:*?"<>|]/g, '_')}.pdf`;
         pdf.save(fileName);
     } catch (error) {
@@ -142,17 +145,18 @@ async function exportPdf() {
 
 async function exportHtml() {
     if (!currentId) {
-        await showAlert("请先选择或创建一篇笔记");
+        await showAlert('请先选择或创建一篇笔记');
         return;
     }
+
     const res = await fetch(`/api/notes/${currentId}`);
     const note = await res.json();
-    const title = note.title || "无标题";
+    const title = note.title || '无标题';
     const cateName = note.cateName || '未分类';
     const time = formatDateTime(note.time);
     const rawMarkdown = document.getElementById('editor').value;
     const content = await markdownToHtml(rawMarkdown);
-    
+
     const htmlContent = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -191,7 +195,7 @@ async function exportHtml() {
     </div>
 </body>
 </html>`;
-    
+
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -205,16 +209,17 @@ async function exportHtml() {
 
 async function exportMd() {
     if (!currentId) {
-        await showAlert("请先选择或创建一篇笔记");
+        await showAlert('请先选择或创建一篇笔记');
         return;
     }
+
     const res = await fetch(`/api/notes/${currentId}`);
     const note = await res.json();
-    const title = note.title || "无标题";
+    const title = note.title || '无标题';
     const cateName = note.cateName || '未分类';
     const time = formatDateTime(note.time);
     const content = document.getElementById('editor').value;
-    
+
     const mdContent = `# ${title}
 
 > **分类**：${cateName}  
@@ -223,7 +228,7 @@ async function exportMd() {
 ---
 
 ${content}`;
-    
+
     const blob = new Blob([mdContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

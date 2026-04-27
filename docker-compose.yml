@@ -8,8 +8,8 @@ services:
     environment:
       - PORT=3000
     volumes:
-      - ./data:/app/data
-      - ./uploads:/app/uploads
+      - ${HOME:-/root}/.note-taking/data:/app/data
+      - ${HOME:-/root}/.note-taking/uploads:/app/uploads
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/notes"]
